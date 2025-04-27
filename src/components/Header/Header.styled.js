@@ -21,15 +21,32 @@ export const headerLogo = styled.div`
     display: block;
 `
 
+const BaseHeaderBtn = styled.a`
+    font-size: 14px;
+    transition: all 0.3s ease;
+`
+
 export const headerNav = styled.nav`
     display: flex;
-    gap: 48px;
+    justify-content: space-between;
+    gap: 24px;
 `
 
-export const headerBtn = styled.a`
-    font-size: 14px;
+export const headerNavBtn = styled.div`
+    display: block;
+    box-sizing: border-box;
 `
 
-export const headerExitBtn = styled.a`
+export const headerBtn = styled(BaseHeaderBtn)`
+    display: inline-block;
+    padding: 0 12px;
+
+    &:hover {
+        font-weight: 600;
+        padding: 0 10px;
+    }
+`
+
+export const headerExitBtn = styled(BaseHeaderBtn)`
     font-weight: 600;
 `
