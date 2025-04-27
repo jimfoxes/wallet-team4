@@ -6,7 +6,7 @@ import prettier from 'eslint-plugin-prettier/recommended'
 
 export default [
     { ignores: ['dist'] },
-    prettier, // Добавляем конфигурацию Prettier (включает и plugin и config-prettier)
+    prettier,
     {
         files: ['**/*.{js,jsx}'],
         languageOptions: {
@@ -30,7 +30,7 @@ export default [
                 'warn',
                 { allowConstantExport: true },
             ],
-            'prettier/prettier': ['error', {}, { usePrettierrc: true }], // Читает настройки из .prettierrc
+            'prettier/prettier': ['error', { usePrettierrc: true, endOfLine: 'auto' }],
         },
     },
 ]

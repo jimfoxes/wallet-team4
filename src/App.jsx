@@ -1,10 +1,13 @@
+import './App.css'
+import { Header } from './components/header'
 import Calendar from './components/calendar/calendar'
 
 function App() {
     return (
-        <div>
+        <>
+            <Header />
             <Calendar />
-        </div>
+        </>
     )
 }
 
