@@ -1,14 +1,11 @@
-import './App.css'
-import AnaliticsTracker from './components/Analitics/AnaliticsTracker'
 import { Header } from './components/Header/Header'
-import Calendar from './components/calendar/calendar'
+import { Main } from './components/Main/Main'
 
 function App() {
     return (
         <>
             <Header />
-            <Calendar />
-            <AnaliticsTracker />
+            <Main />
         </>
     )
 }

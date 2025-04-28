@@ -15,6 +15,13 @@ body {
   font-weight: 400;
 }
 
+h1 {
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 150%;
+  padding: 36px 0 32px 0;
+}
+
 .container {
     max-width: 1260px;
     width: 100%;

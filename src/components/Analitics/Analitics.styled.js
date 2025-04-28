@@ -83,7 +83,7 @@ export const DateValue = styled.span`
 export const CategoryContainer = styled.div`
     flex-grow: 1;
     flex-shrink: 1;
-    width: 75px;
+    width: 94px;
 `
 
 export const CategoryAmount = styled.div`
