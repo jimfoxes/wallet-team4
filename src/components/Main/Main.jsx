@@ -4,7 +4,7 @@ import Calendar from '../calendar/calendar'
 import * as S from './Main.styled'
 
 export const Main = () => {
-    const title = 'Анализ расходов'
+    const title = 'Анализ расходов!'
 
     return (
         <S.main>
