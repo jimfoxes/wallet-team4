@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { NavLink, Link } from 'react-router-dom'
 
 export const header = styled.header`
     width: 100%;
@@ -21,9 +22,15 @@ export const headerLogo = styled.div`
     display: block;
 `
 
-const BaseHeaderBtn = styled.a`
+const BaseHeaderBtn = styled(NavLink)`
     font-size: 14px;
     transition: all 0.3s ease;
+    &.active {
+        color: #1fa46c;
+        font-weight: 600;
+        text-decoration: underline;
+        padding: 0 10px;
+    }
 `
 
 export const headerNav = styled.nav`
@@ -47,6 +54,6 @@ export const headerBtn = styled(BaseHeaderBtn)`
     }
 `
 
-export const headerExitBtn = styled(BaseHeaderBtn)`
+export const headerExitBtn = styled(Link)`
     font-weight: 600;
 `

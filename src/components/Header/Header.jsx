@@ -13,10 +13,12 @@ export const Header = () => {
                     </S.headerLogo>
                     <S.headerNav>
                         <S.headerNavBtn>
-                            <S.headerBtn href="#">Мои расходы</S.headerBtn>
+                            <S.headerBtn to="/">Мои расходы</S.headerBtn>
                         </S.headerNavBtn>
                         <S.headerNavBtn>
-                            <S.headerBtn href="#">Анализ расходов</S.headerBtn>
+                            <S.headerBtn to="/analytics">
+                                Анализ расходов
+                            </S.headerBtn>
                         </S.headerNavBtn>
                     </S.headerNav>
                     <S.headerExitBtn href="#">Выход</S.headerExitBtn>

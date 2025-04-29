@@ -1,12 +1,11 @@
-import { Header } from './components/Header/Header'
-import { Main } from './components/Main/Main'
+import AppRoutes from './components/AppRoutes'
+import { AuthProvider } from './сontext/AuthProvider'
 
 function App() {
     return (
-        <>
-            <Header />
-            <Main />
-        </>
+        <AuthProvider>
+            <AppRoutes />
+        </AuthProvider>
     )
 }
 

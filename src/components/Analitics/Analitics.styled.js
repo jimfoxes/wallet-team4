@@ -106,3 +106,16 @@ export const CategoryName = styled.div`
     margin-top: 12px;
     color: rgba(0, 0, 0, 1);
 `
+export const analiticsMain = styled.main`
+    width: 100%;
+`
+
+export const analiticsContent = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    @media screen and (max-width: 1200px) {
+        display: block;
+    }
+`
