@@ -1,18 +1,19 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from "styled-components";
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   #root {
+    text-align: center;
     margin: 0 auto;
   }
 
-* {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     letter-spacing: 0px;
-}
+  }
 
-*:before,
+  *:before,
   *:after {
     box-sizing: border-box;
   }
@@ -48,32 +49,10 @@ const GlobalStyle = createGlobalStyle`
   body {
     width: 100%;
     height: 100%;
+    padding-right: calc(50% - 600px);
+    padding-left: calc(50% - 600px);
     font-family: Montserrat;
     background-color: #f4f5f6;
     color: #000000
   }
-
-h1 {
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 150%;
-  padding: 36px 0 32px 0;
-}
-
-.container {
-    max-width: 1260px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 30px;
-}
-
-a {
-    color: #000;
-    text-decoration: none;
-    &:hover {
-      color: #1fa46c;
-    }
-}
-`
-
-export default GlobalStyle
+`;

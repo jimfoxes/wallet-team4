@@ -30,7 +30,10 @@ export default [
                 'warn',
                 { allowConstantExport: true },
             ],
-            'prettier/prettier': ['error', { usePrettierrc: true, endOfLine: 'auto' }],
+            'prettier/prettier': [
+                'error',
+                { usePrettierrc: true, endOfLine: 'auto' },
+            ],
         },
     },
 ]
