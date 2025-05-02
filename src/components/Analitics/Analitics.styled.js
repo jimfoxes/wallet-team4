@@ -108,6 +108,21 @@ export const CategoryName = styled.div`
 `
 export const analiticsMain = styled.main`
     width: 100%;
+    padding-right: calc(50% - 600px);
+    padding-left: calc(50% - 600px);
+`
+
+export const Title = styled.h1`
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 150%;
+    letter-spacing: 0px;
+    margin: 36px 0 32px 0;
+    text-align: start;
+    padding-left: calc(50% - 600px);
+
+    min-width: 235px;
+    height: 48px;
 `
 
 export const analiticsContent = styled.div`
