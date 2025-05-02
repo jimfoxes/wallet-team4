@@ -1,14 +1,18 @@
+import { Outlet } from 'react-router-dom'
+
 import Main from '../components/Main/Main'
 import { Header } from '../components/Header/Header'
 
-import { Outlet } from 'react-router-dom'
+import { TransactionsProvider } from '../сontext/TransactionsProvider'
 
 function MainPage() {
     return (
         <>
-            <Header />
-            <Main />
-            <Outlet />
+            <TransactionsProvider>
+                <Header />
+                <Main />
+                <Outlet />
+            </TransactionsProvider>
         </>
     )
 }

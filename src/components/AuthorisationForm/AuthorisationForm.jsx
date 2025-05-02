@@ -20,6 +20,7 @@ const AuthorisationForm = ({ isSignUp }) => {
         name: false,
         login: false,
         password: false,
+        button: false,
     })
 
     const [error, setError] = useState('')
@@ -61,83 +62,76 @@ const AuthorisationForm = ({ isSignUp }) => {
     }
 
     return (
-        <>
-            <S.Wrapper>
-                <S.Container>
-                    <S.Modal>
-                        <S.ModalBlock>
-                            <S.ModalTitle>
-                                <h2>{isSignUp ? 'Регистрация' : 'Вход'}</h2>
-                            </S.ModalTitle>
-                            <S.ModalForm id="formLogUp" action="#">
-                                {isSignUp && (
-                                    <S.ModalInput
-                                        $error={errors.name}
-                                        type="text"
-                                        name="name"
-                                        id="form-name"
-                                        placeholder="Имя"
-                                        onChange={inputChange}
-                                    />
-                                )}
-                                <S.ModalInput
-                                    $error={errors.login}
-                                    type="text"
-                                    name="login"
-                                    id="form-login"
-                                    placeholder="Эл. почта"
-                                    onChange={inputChange}
-                                />
-                                <S.ModalInput
-                                    $error={errors.password}
-                                    type="password"
-                                    name="password"
-                                    id="form-password"
-                                    placeholder="Пароль"
-                                    onChange={inputChange}
-                                />
+        <S.Wrapper>
+            <S.Modal>
+                <S.ModalBlock>
+                    <S.ModalTitle>
+                        <h2>{isSignUp ? 'Регистрация' : 'Вход'}</h2>
+                    </S.ModalTitle>
+                    <S.ModalForm id="formLogUp" action="#">
+                        {isSignUp && (
+                            <S.ModalInput
+                                $error={errors.name}
+                                type="text"
+                                name="name"
+                                id="form-name"
+                                placeholder="Имя"
+                                onChange={inputChange}
+                            />
+                        )}
+                        <S.ModalInput
+                            $error={errors.login}
+                            type="text"
+                            name="login"
+                            id="form-login"
+                            placeholder="Эл. почта"
+                            onChange={inputChange}
+                        />
+                        <S.ModalInput
+                            $error={errors.password}
+                            type="password"
+                            name="password"
+                            id="form-password"
+                            placeholder="Пароль"
+                            onChange={inputChange}
+                        />
 
-                                {error ? (
-                                    <S.ErrorContainer>
-                                        <p>
-                                            Введенные вами данные некорректны.{' '}
-                                            {error}
-                                        </p>
-                                    </S.ErrorContainer>
-                                ) : (
-                                    ''
-                                )}
+                        {error ? (
+                            <S.ErrorContainer>
+                                <p>
+                                    Упс! Введенные вами данные некорректны.
+                                    Введите данные корректно и повторите
+                                    попытку. {error}
+                                </p>
+                            </S.ErrorContainer>
+                        ) : (
+                            ''
+                        )}
 
-                                <S.ModalButton
-                                    onClick={submitButton}
-                                    id="form-button"
-                                >
-                                    <a href="../main.html">
-                                        {isSignUp
-                                            ? 'Зарегистрироваться'
-                                            : 'Войти'}
-                                    </a>
-                                </S.ModalButton>
-                                <S.ModalFormFooter className="modal__form-group">
-                                    <p>
-                                        {isSignUp
-                                            ? 'Уже есть аккаунт?'
-                                            : 'Нужно зарегистрироваться?'}
-                                    </p>
-                                    <Link
-                                        to={isSignUp ? '/sign-in' : '/sign-up'}
-                                    >
-                                        {isSignUp
-                                            ? 'Войдите здесь'
-                                            : 'Регистрируйтесь здесь'}
-                                    </Link>
-                                </S.ModalFormFooter>
-                            </S.ModalForm>
-                        </S.ModalBlock>
-                    </S.Modal>
-                </S.Container>
-            </S.Wrapper>
-        </>
+                        <S.ModalButton
+                            $error={errors.button}
+                            onClick={submitButton}
+                        >
+                            <a href="../main.html">
+                                {isSignUp ? 'Зарегистрироваться' : 'Войти'}
+                            </a>
+                        </S.ModalButton>
+                        <S.ModalFormFooter className="modal__form-group">
+                            <p>
+                                {isSignUp
+                                    ? 'Уже есть аккаунт?'
+                                    : 'Нужно зарегистрироваться?'}
+                            </p>
+                            <Link to={isSignUp ? '/sign-in' : '/sign-up'}>
+                                {isSignUp
+                                    ? 'Войдите здесь'
+                                    : 'Регистрируйтесь здесь'}
+                            </Link>
+                        </S.ModalFormFooter>
+                    </S.ModalForm>
+                </S.ModalBlock>
+            </S.Modal>
+        </S.Wrapper>
     )
 }
 

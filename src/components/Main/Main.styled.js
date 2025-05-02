@@ -1,7 +1,16 @@
 import styled from 'styled-components'
 
-export const main = styled.main`
-    width: 100%;
+export const Title = styled.h1`
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 150%;
+    letter-spacing: 0px;
+    margin: 36px 0 32px 0;
+    text-align: start;
+    padding-left: calc(50% - 600px);
+
+    min-width: 235px;
+    height: 48px;
 `
 
 export const Container = styled.div`
@@ -9,8 +18,9 @@ export const Container = styled.div`
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-column-gap: 20px;
-    /*grid-template-rows: 116px 1fr;*/
     overflow: hidden;
+    padding-right: calc(50% - 600px);
+    padding-left: calc(50% - 600px);
 `
 
 export const TitleContainer = styled.h1`
@@ -60,32 +70,12 @@ export const FilterSortingElement = styled.div`
     cursor: pointer;
 
     a {
-        /* display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center; */
-
         font-weight: 400;
         font-size: 12px;
         line-height: 150%;
         max-width: ${function ({ $isCategory }) {
             return $isCategory ? '260px' : '160px'
         }};
-
-        /* &::after {
-      content: "";
-      display: block;
-      width: 7px;
-      height: 7px;
-      border-left: 1px solid rgba(0, 0, 0, 1);
-      border-bottom: 1px solid rgba(0, 0, 0, 1);
-      background: #000000;
-      transform: rotate(-45deg);
-      margin: -6px 0 0 5px;
-      padding: 0;
-      
-      background-image: url("../../images/filterSortingIcon.svg");
-    } */
 
         span {
             color: rgba(31, 164, 108, 1);
@@ -114,6 +104,9 @@ export const ColumnsElement = styled.h4`
     color: rgba(153, 153, 153, 1);
     text-align: start;
 `
+export const ColumnsShadowElement = styled.div`
+    width: 36px;
+`
 
 export const DemarcationLine = styled.div`
     width: 100%;
@@ -121,6 +114,12 @@ export const DemarcationLine = styled.div`
     border-top: 0.5px solid #999999;
     margin-top: 6px;
     margin-bottom: 18px;
+`
+
+export const TransactionsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 `
 
 export const Costsform = styled.div`

@@ -1,13 +1,15 @@
 import styled from 'styled-components'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 export const header = styled.header`
     width: 100%;
-    margin: 0 auto;
     background-color: #ffffff;
 `
 
 export const headerBlock = styled.div`
+    padding-right: calc(50% - 600px);
+    padding-left: calc(50% - 600px);
+
     height: 64px;
     display: flex;
     flex-wrap: nowrap;
@@ -54,6 +56,16 @@ export const headerBtn = styled(BaseHeaderBtn)`
     }
 `
 
-export const headerExitBtn = styled(Link)`
+export const headerExitBtn = styled.button`
+    border: none;
+    background-color: transparent;
     font-weight: 600;
+    font-size: 14px;
+    line-height: 170%;
+    letter-spacing: 0px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        color: rgba(31, 164, 108, 1);
+    }
 `

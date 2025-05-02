@@ -10,8 +10,13 @@ function AppRoutes() {
     return (
         <Routes>
             <Route element={<PrivateRoute />}>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/analytics" element={<AnaliticsPage />} />
+                <Route path="/" element={<MainPage />}>
+                    {/* Outlet */}
+                </Route>
+
+                <Route path="/analytics" element={<AnaliticsPage />}>
+                    {/* Outlet */}
+                </Route>
             </Route>
 
             <Route path="/sign-in" element={<SignInPage />} />
