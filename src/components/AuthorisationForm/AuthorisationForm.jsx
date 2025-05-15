@@ -71,29 +71,41 @@ const AuthorisationForm = ({ isSignUp }) => {
                     <S.ModalForm id="formLogUp" action="#">
                         {isSignUp && (
                             <S.ModalInput
-                                $error={errors.name}
                                 type="text"
                                 name="name"
                                 id="form-name"
-                                placeholder="Имя"
+                                placeholder={errors.name ? 'Имя *' : 'Имя'}
                                 onChange={inputChange}
+                                $error={errors.name}
+                                $valid={
+                                    !errors.name && inputData.name.length > 0
+                                }
                             />
                         )}
                         <S.ModalInput
-                            $error={errors.login}
                             type="text"
                             name="login"
                             id="form-login"
-                            placeholder="Эл. почта"
+                            placeholder={
+                                errors.login ? 'Эл. почта *' : 'Эл. почта'
+                            }
                             onChange={inputChange}
+                            $error={errors.login}
+                            $valid={!errors.login && inputData.login.length > 0}
                         />
                         <S.ModalInput
-                            $error={errors.password}
                             type="password"
                             name="password"
                             id="form-password"
-                            placeholder="Пароль"
+                            placeholder={
+                                errors.password ? 'Пароль *' : 'Пароль'
+                            }
                             onChange={inputChange}
+                            $error={errors.password}
+                            $valid={
+                                !errors.password &&
+                                inputData.password.length > 0
+                            }
                         />
 
                         {error ? (
