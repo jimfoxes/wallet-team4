@@ -53,17 +53,22 @@ export const ModalForm = styled.form`
 export const ModalInput = styled.input`
     width: 100%;
     outline: none;
-
     border-radius: 6px;
-    border: 0.5px solid;
-    border-color: ${function ({ $error }) {
-        return $error ? '#F84D4D' : 'rgba(153, 153, 153, 1)'
-    }};
-
     padding: 12px 12px;
     color: rgba(0, 0, 0, 1);
-    background-color: ${function ({ $error }) {
-        return $error ? 'rgba(255, 235, 235, 1)' : 'transparent'
+    box-sizing: border-box;
+
+    border: 0.5px solid
+        ${({ $error, $valid }) => {
+            if ($error) return 'rgb(242, 80, 80)'
+            if ($valid) return 'rgb(31, 164, 108)'
+            return 'rgba(153, 153, 153, 1)'
+        }};
+
+    background-color: ${({ $error, $valid }) => {
+        if ($error) return 'rgb(255, 235, 235)'
+        if ($valid) return 'rgb(219, 255, 233)'
+        return 'transparent'
     }};
 
     &::placeholder {
