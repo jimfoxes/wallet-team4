@@ -1,7 +1,10 @@
 import { useContext, useState } from 'react'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
+import { DayPicker } from 'react-day-picker'
+import 'react-day-picker/dist/style.css'
 
 import SvgComponent from '../SvgComponent'
-import Calendar from '../Calendar/Calendar'
 
 import { addTransaction } from '../../services/transactionsHandler'
 
@@ -21,12 +24,7 @@ function Costsform() {
 
     const { setTransactionsList, setLoading } = useContext(TransactionsContext)
 
-    const [newTransactionInfo, setNewTransactionInfo] = useState({
-        description: '',
-        // sum: '',
-        category: '',
-        date: new Date(),
-    })
+    const [newTransactionInfo, setNewTransactionInfo] = useState({})
 
     const [errors, setErrors] = useState({
         description: false,
@@ -83,6 +81,13 @@ function Costsform() {
             return isCorrect
         }
 
+        if (!newTransactionInfo.date) {
+            errors.date = true
+            setError('Пожалуйста, выберите дату')
+            isCorrect = false
+            return isCorrect
+        }
+
         setErrors(errors)
         return isCorrect
     }
@@ -111,15 +116,18 @@ function Costsform() {
 
     // Закомментировал добавление даты, пока не заработает функционал выбора даты из календаря
 
-    // const [transactionDate, setTransactionDate] = useState('')
+    const [transactionDate, setTransactionDate] = useState('')
 
-    // const newTransactionDateSelect = (newSelected) => {
-    //     setTransactionDate(newSelected)
-    //     setNewTransactionInfo({
-    //         ...newTransactionInfo,
-    //         date: new Date(newSelected).toJSON(),
-    //     })
-    // }
+    const newTransactionDateSelect = (newSelected) => {
+        setShowCalendar(!showCalendar)
+        if (newSelected) {
+            setTransactionDate(newSelected)
+            setNewTransactionInfo({
+                ...newTransactionInfo,
+                date: newSelected.toJSON(),
+            })
+        }
+    }
 
     function addNewTransaction(event) {
         event.stopPropagation()
@@ -129,21 +137,21 @@ function Costsform() {
             addTransaction(newTransactionInfo, token).then((response) => {
                 setTransactionsList(response.data.transactions)
                 setActiveCategory('')
+                setTransactionDate('')
 
-                {
-                    const inputs = document.querySelectorAll('input')
-                    inputs.forEach((el) => {
-                        el.value = ''
-                    })
-                }
-
-                // Костыль, пока не заработает функционал выбора даты из календаря
                 setNewTransactionInfo({
                     description: '',
-                    // sum: '',
+                    sum: '',
                     category: '',
-                    date: new Date(),
+                    date: '',
                 })
+
+                // {
+                //     const inputs = document.querySelectorAll('input')
+                //     inputs.forEach((el) => {
+                //         el.value = ''
+                //     })
+                // }
 
                 setLoading(false)
             })
@@ -161,6 +169,7 @@ function Costsform() {
                         name="description"
                         placeholder="Введите описание"
                         type="text"
+                        value={newTransactionInfo.description || ''}
                         onChange={(event) => {
                             transactionInfoChange(event, false)
                         }}
@@ -201,9 +210,25 @@ function Costsform() {
                         placeholder="Введите дату"
                         type="text"
                         onClick={showCalendarToggle}
+                        value={
+                            transactionDate
+                                ? format(transactionDate, 'dd.MM.yyyy')
+                                : ''
+                        }
+                        readOnly
                     />
 
-                    {showCalendar ? <Calendar></Calendar> : ''}
+                    {showCalendar && (
+                        <S.CalendarWrapper>
+                            <DayPicker
+                                mode="single"
+                                selected={transactionDate || undefined}
+                                onSelect={newTransactionDateSelect}
+                                disabled={{ after: new Date() }}
+                                locale={ru}
+                            />
+                        </S.CalendarWrapper>
+                    )}
                 </S.CategoryContainer>
 
                 <S.CategoryContainer>
@@ -213,6 +238,7 @@ function Costsform() {
                         name="sum"
                         placeholder="Введите сумму"
                         type="text"
+                        value={newTransactionInfo.sum || ''}
                         onChange={(event) => {
                             transactionInfoChange(event, true)
                         }}
