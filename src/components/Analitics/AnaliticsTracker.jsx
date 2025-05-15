@@ -3,7 +3,7 @@ import AnaliticsHeader from './AnaliticsHeader'
 import AnaliticsCategory from './AnaliticsCategory'
 import * as S from './Analitics.styled'
 
-const AnaliticsTracker = () => {
+const AnaliticsTracker = ({ transactions }) => {
     const AnaliticsCategories = [
         {
             id: 1,
