@@ -79,6 +79,7 @@ export const Category = styled.div`
         height: 15px;
         font-weight: 400;
         font-size: 12px;
+        color: inherit;
     }
 `
 

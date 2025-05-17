@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { DayPicker } from 'react-day-picker'
@@ -6,7 +6,10 @@ import 'react-day-picker/dist/style.css'
 
 import SvgComponent from '../SvgComponent'
 
-import { addTransaction } from '../../services/transactionsHandler'
+import {
+    addTransaction,
+    updateTransaction,
+} from '../../services/transactionsHandler'
 
 import {
     LS_USER,
@@ -22,7 +25,15 @@ import * as S from './Costsform.styled'
 function Costsform() {
     const token = JSON.parse(localStorage.getItem(LS_USER)).token
 
-    const { setTransactionsList, setLoading } = useContext(TransactionsContext)
+    const {
+        setTransactionsList,
+        setLoading,
+        transactionId,
+        setTransactionId,
+        transactionsList,
+    } = useContext(TransactionsContext)
+
+    const [isEditing, setIsEditing] = useState(false)
 
     const [newTransactionInfo, setNewTransactionInfo] = useState({})
 
@@ -122,9 +133,10 @@ function Costsform() {
         setShowCalendar(!showCalendar)
         if (newSelected) {
             setTransactionDate(newSelected)
+            const dateStr = format(newSelected, 'yyyy-MM-dd')
             setNewTransactionInfo({
                 ...newTransactionInfo,
-                date: newSelected.toJSON(),
+                date: dateStr,
             })
         }
     }
@@ -158,9 +170,56 @@ function Costsform() {
         }
     }
 
+    useEffect(() => {
+        if (transactionId) {
+            const transactionToEdit = transactionsList.find(
+                (t) => t._id === transactionId
+            )
+            if (transactionToEdit) {
+                setIsEditing(true)
+                setNewTransactionInfo({
+                    description: transactionToEdit.description,
+                    sum: transactionToEdit.sum,
+                    category: transactionToEdit.category,
+                    date: transactionToEdit.date,
+                })
+                setTransactionDate(new Date(transactionToEdit.date))
+                setActiveCategory(transactionToEdit.category)
+            }
+        } else {
+            setIsEditing(false)
+            setNewTransactionInfo({
+                description: '',
+                sum: '',
+                category: '',
+                date: '',
+            })
+            setTransactionDate('')
+            setActiveCategory('')
+        }
+    }, [transactionId, transactionsList])
+
+    function saveEditedTransaction(event) {
+        event.stopPropagation()
+        event.preventDefault()
+        console.log(newTransactionInfo.date)
+        if (newTransactionErrors()) {
+            updateTransaction(transactionId, newTransactionInfo, token).then(
+                (response) => {
+                    setTransactionsList(response.data.transactions)
+                    setTransactionId('')
+                    setIsEditing(false)
+                    setLoading(false)
+                }
+            )
+        }
+    }
+
     return (
         <>
-            <S.TitleCostsform>Новый расход</S.TitleCostsform>
+            <S.TitleCostsform>
+                {isEditing ? 'Редактирование' : 'Новый расход'}
+            </S.TitleCostsform>
             <S.Costsform>
                 <S.CategoryContainer>
                     <S.TitleCategory>Описание</S.TitleCategory>
@@ -185,7 +244,7 @@ function Costsform() {
                             return (
                                 <S.Category
                                     key={index}
-                                    $filter={newTransactionInfo.category === el}
+                                    $filter={activeCategory === el}
                                     name={el}
                                     onClick={setNewTransactionCategory}
                                 >
@@ -226,6 +285,7 @@ function Costsform() {
                                 onSelect={newTransactionDateSelect}
                                 disabled={{ after: new Date() }}
                                 locale={ru}
+                                modifiers={{ utc: true }}
                             />
                         </S.CalendarWrapper>
                     )}
@@ -248,10 +308,16 @@ function Costsform() {
                 <S.CostsformButton
                     onClick={(event) => {
                         setLoading(true)
-                        addNewTransaction(event)
+                        if (isEditing) {
+                            saveEditedTransaction(event)
+                        } else {
+                            addNewTransaction(event)
+                        }
                     }}
                 >
-                    Добавить новый расход
+                    {isEditing
+                        ? 'Сохранить редактирование'
+                        : 'Добавить новый расход'}
                 </S.CostsformButton>
             </S.Costsform>
         </>
