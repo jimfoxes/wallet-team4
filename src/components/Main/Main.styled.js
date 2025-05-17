@@ -119,7 +119,6 @@ export const DemarcationLine = styled.div`
 export const TransactionsContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 14px;
 `
 
 export const Costsform = styled.div`

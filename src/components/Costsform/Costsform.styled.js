@@ -17,6 +17,7 @@ export const Costsform = styled.form`
 `
 
 export const CategoryContainer = styled.div`
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -78,6 +79,7 @@ export const Category = styled.div`
         height: 15px;
         font-weight: 400;
         font-size: 12px;
+        color: inherit;
     }
 `
 
@@ -94,4 +96,13 @@ export const CostsformButton = styled.button`
     line-height: 100%;
     letter-spacing: 0px;
     color: rgba(255, 255, 255, 1);
+`
+export const CalendarWrapper = styled.div`
+    position: absolute;
+    z-index: 1000;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    top: 40px;
+    left: 5px;
 `
