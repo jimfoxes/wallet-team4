@@ -52,6 +52,7 @@ export const TotalAmount = styled.h2`
     font-size: 24px;
     font-weight: 700;
     margin: 0;
+    text-align: left;
 `
 
 export const DateContainer = styled.div`

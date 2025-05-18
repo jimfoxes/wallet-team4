@@ -1,7 +1,7 @@
-import AuthorisationForm from "../components/AuthorisationForm/AuthorisationForm";
+import AuthorisationForm from '../components/AuthorisationForm/AuthorisationForm'
 
 const SignInPage = () => {
-  return <AuthorisationForm isSignUp={false} />;
-};
+    return <AuthorisationForm isSignUp={false} />
+}
 
-export default SignInPage;
+export default SignInPage

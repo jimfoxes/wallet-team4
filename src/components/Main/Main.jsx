@@ -5,8 +5,12 @@ import TransactionElement from '../TransactionElement/TransactionElement'
 import Costsform from '../Costsform/Costsform'
 import Loading from '../Loading/Loading'
 
-import { getTransactions } from '../../services/transactionsHandler'
-import { LS_USER } from '../../services/utilities'
+import {
+    getTransactions,
+    getFilteredTransactions,
+} from '../../services/transactionsHandler'
+
+import { LS_USER, categorySetter } from '../../services/utilities'
 
 import { TransactionsContext } from '../../сontext/TransactionsContext'
 
@@ -41,17 +45,151 @@ function Main() {
         getTransactionsList()
     }, [])
 
-    const [filter, setFilter] = useState('')
+    function getFilteredTransactionsList() {
+        setLoading(true)
+
+        console.log(filter)
+
+        getFilteredTransactions({
+            token,
+            filterAndSortParams,
+        })
+            .then((response) => {
+                if (response.name === 'AxiosError') {
+                    //   setError(response.response.data.error);
+                    console.log('error')
+                } else {
+                    setTransactionsList(response.data)
+                }
+            })
+            .catch((err) => {
+                // setError(err.response.data.error);
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
+    const [filter, setFilter] = useState([])
     const [filterPopUp, setfilterPopUp] = useState(false)
 
     const [sorting, setSorting] = useState('')
     const [sortingPopUp, setsortingPopUp] = useState(false)
 
+    const [filterAndSortParams, setFilterAndSortParams] = useState({
+        filterBy: '',
+        sortBy: '',
+    })
+
+    function filtersSetter(event) {
+        event.stopPropagation()
+        event.preventDefault()
+
+        const selectedFilter = event.currentTarget.children[1].textContent
+
+        if (selectedFilter === filter.toString()) {
+            setFilter([])
+
+            setFilterAndSortParams({
+                ...filterAndSortParams,
+                filterBy: '',
+            })
+
+            return
+        }
+
+        if (filter.toString().includes(selectedFilter)) {
+            setFilter(filter.filter((el) => el !== selectedFilter))
+
+            const urlFilter = filter.reduce((newArray, el) => {
+                if (el !== selectedFilter) {
+                    newArray.push(categorySetter(el))
+                }
+
+                return newArray
+            }, [])
+
+            setFilterAndSortParams({
+                ...filterAndSortParams,
+                filterBy: urlFilter.join(),
+            })
+
+            return
+        } else {
+            filter.push(selectedFilter)
+
+            const urlFilter = filter.map((el) => categorySetter(el)).join()
+
+            setFilterAndSortParams({
+                ...filterAndSortParams,
+                filterBy: urlFilter,
+            })
+
+            return
+        }
+    }
+
+    // const filterRef = useRef()
+    // const sortingRef = useRef()
+    // // const filterAndSortParamsRef = useRef()
+
+    // useEffect(() => {
+    //     filterRef.current = []
+    //     sortingRef.current = ''
+    //     // filterAndSortParamsRef.current = {
+    //     //     filterBy: '',
+    //     //     sortBy: '',
+    //     // }
+    // }, [])
+
+    function sortingSetter(event) {
+        event.stopPropagation()
+        event.preventDefault()
+
+        const selectedFilter =
+            event.currentTarget.children[0].textContent === 'Дате'
+                ? 'date'
+                : 'sum'
+
+        if (
+            event.currentTarget.children[0].textContent.toLowerCase() ===
+            sorting
+        ) {
+            setSorting('')
+            setFilterAndSortParams({
+                ...filterAndSortParams,
+                sortBy: '',
+            })
+
+            return
+        }
+
+        setSorting(event.currentTarget.children[0].textContent.toLowerCase())
+
+        setFilterAndSortParams({
+            ...filterAndSortParams,
+            sortBy: selectedFilter,
+        })
+    }
+
     return (
         <>
+            {filterPopUp || sortingPopUp ? (
+                <S.OverlayWrapper
+                    onClick={() => {
+                        setfilterPopUp(false)
+                        setsortingPopUp(false)
+
+                        getFilteredTransactionsList()
+                    }}
+                />
+            ) : (
+                ''
+            )}
             <S.Title>Мои расходы</S.Title>
             <S.Container>
-                <S.CostsTable>
+                <S.CostsTable $blockScroll={filterPopUp || sortingPopUp}>
                     <S.HeaderCostsTable>
                         <S.TitleCostsTable>Таблица расходов</S.TitleCostsTable>
                         <S.FilterSortingContainer>
@@ -63,7 +201,7 @@ function Main() {
                             >
                                 <a>
                                     Фильтровать по категории{' '}
-                                    <span>{filter}</span>
+                                    <span>{filter.join(', ')}</span>
                                 </a>
                                 <svg
                                     width="7"
@@ -81,7 +219,7 @@ function Main() {
                                     <FilterSortingPopUp
                                         isCategory={true}
                                         filter={filter}
-                                        setFilter={setFilter}
+                                        filtersSetter={filtersSetter}
                                     />
                                 ) : (
                                     ''
@@ -113,7 +251,7 @@ function Main() {
                                     <FilterSortingPopUp
                                         isCategory={false}
                                         sorting={sorting}
-                                        setSorting={setSorting}
+                                        sortingSetter={sortingSetter}
                                     />
                                 ) : (
                                     ''
@@ -129,6 +267,13 @@ function Main() {
                         <S.ColumnsShadowElement></S.ColumnsShadowElement>
                     </S.ColumnsContainer>
                     <S.DemarcationLine></S.DemarcationLine>
+
+                    {filterPopUp || sortingPopUp ? (
+                        <S.BlurWrapper></S.BlurWrapper>
+                    ) : (
+                        ''
+                    )}
+
                     <S.TransactionsContainer>
                         {loading ? (
                             <Loading />

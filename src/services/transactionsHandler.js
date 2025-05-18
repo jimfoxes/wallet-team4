@@ -45,6 +45,28 @@ export async function addTransaction(newTransactionInfo, token) {
     }
 }
 
+export async function getFilteredTransactions({ token, filterAndSortParams }) {
+
+    let filteredUrl = url
+
+    if (
+        filterAndSortParams.filterBy !== '' &&
+        filterAndSortParams.sortBy !== ''
+    ) {
+        filteredUrl = `${url}?sortBy=${filterAndSortParams.sortBy}&filterBy=${filterAndSortParams.filterBy}`
+    } else if (filterAndSortParams.filterBy !== '') {
+        filteredUrl = `${url}?filterBy=${filterAndSortParams.filterBy}`
+    } else if (filterAndSortParams.sortBy !== '') {
+        filteredUrl = `${url}?sortBy=${filterAndSortParams.sortBy}`
+    }
+
+    try {
+        const data = await axios.get(filteredUrl, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            },
+        })
+
 export async function updateTransaction(
     transactionId,
     updatedTransactionInfo,

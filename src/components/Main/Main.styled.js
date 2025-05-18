@@ -1,5 +1,12 @@
 import styled from 'styled-components'
 
+export const OverlayWrapper = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+`
+
 export const Title = styled.h1`
     font-weight: 700;
     font-size: 32px;
@@ -34,10 +41,14 @@ export const TitleContainer = styled.h1`
 `
 
 export const CostsTable = styled.div`
+    position: relative;
     grid-column: 1/9;
     background-color: #ffffff;
     max-height: 618px;
     border-radius: 30px;
+    overflow-y: ${function ({ $blockScroll }) {
+        return $blockScroll ? 'hidden' : 'scroll'
+    }};
 `
 
 export const HeaderCostsTable = styled.div`
@@ -114,6 +125,14 @@ export const DemarcationLine = styled.div`
     border-top: 0.5px solid #999999;
     margin-top: 6px;
     margin-bottom: 18px;
+`
+
+export const BlurWrapper = styled.div`
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    backdrop-filter: blur(2px);
 `
 
 export const TransactionsContainer = styled.div`
