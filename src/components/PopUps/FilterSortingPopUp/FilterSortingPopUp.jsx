@@ -1,38 +1,38 @@
 import SvgComponent from '../../SvgComponent'
 
-import { categoriesRu, categoriesEng } from '../../../services/utilities'
+import { categories } from '../../../services/utilities'
 
 import * as S from './FilterSortingPopUp.styled'
 
 function FilterSortingPopUp({
     isCategory,
     filter,
-    setFilter,
     sorting,
-    setSorting,
+    filtersSetter,
+    sortingSetter,
 }) {
     return isCategory ? (
         <S.Container $isCategory={isCategory}>
             <ul>
-                {categoriesEng.map((el, index) => {
+                {categories.map((el, index) => {
                     return (
                         <S.ListItem
                             key={index}
-                            $filter={
-                                filter === categoriesRu[index].toLowerCase()
-                            }
+                            $filter={filter.includes(
+                                Object.values(el).toString()
+                            )}
                             onClick={(event) => {
-                                setFilter(
-                                    event.currentTarget.children[1].textContent.toLowerCase()
-                                )
+                                filtersSetter(event)
                             }}
                         >
                             <SvgComponent
-                                content={el}
-                                isActive={filter}
+                                content={Object.keys(el)}
+                                isActive={filter.includes(
+                                    Object.values(el).toString()
+                                )}
                             ></SvgComponent>
 
-                            <span>{categoriesRu[index]}</span>
+                            <span>{Object.values(el)}</span>
                         </S.ListItem>
                     )
                 })}
@@ -44,9 +44,7 @@ function FilterSortingPopUp({
                 <S.ListItem
                     $sorting={sorting === 'дате'}
                     onClick={(event) => {
-                        setSorting(
-                            event.currentTarget.children[0].textContent.toLowerCase()
-                        )
+                        sortingSetter(event)
                     }}
                 >
                     <span>Дате</span>
@@ -54,9 +52,7 @@ function FilterSortingPopUp({
                 <S.ListItem
                     $sorting={sorting === 'сумме'}
                     onClick={(event) => {
-                        setSorting(
-                            event.currentTarget.children[0].textContent.toLowerCase()
-                        )
+                        sortingSetter(event)
                     }}
                 >
                     <span>Сумме</span>

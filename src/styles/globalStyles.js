@@ -11,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
       padding: 0;
       box-sizing: border-box;
       letter-spacing: 0px;
-      color: #000000;
+      /* color: #000000; */
   }
 
   *:before,
@@ -23,8 +23,9 @@ const GlobalStyle = createGlobalStyle`
   a:visited {
     text-decoration: none;
     cursor: pointer;
+    color: #000000;
     &:hover {
-      /* color: #1fa46c; */
+      color: #1fa46c;
     }
   }
 

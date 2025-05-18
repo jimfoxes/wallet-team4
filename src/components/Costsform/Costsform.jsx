@@ -5,12 +5,7 @@ import Calendar from '../Calendar/Calendar'
 
 import { addTransaction } from '../../services/transactionsHandler'
 
-import {
-    LS_USER,
-    categoriesEng,
-    categoriesRu,
-    categoryDefiner,
-} from '../../services/utilities'
+import { LS_USER, categories } from '../../services/utilities'
 
 import { TransactionsContext } from '../../сontext/TransactionsContext'
 
@@ -147,6 +142,8 @@ function Costsform() {
 
                 setLoading(false)
             })
+        } else {
+            setLoading(false)
         }
     }
 
@@ -172,21 +169,27 @@ function Costsform() {
                     {errors.category ? <p>{error}</p> : ''}
 
                     <S.CategoriesWrapper>
-                        {categoriesEng.map((el, index) => {
+                        {categories.map((el, index) => {
                             return (
                                 <S.Category
                                     key={index}
-                                    $filter={newTransactionInfo.category === el}
-                                    name={el}
-                                    onClick={setNewTransactionCategory}
+                                    $filter={
+                                        newTransactionInfo.category ===
+                                        Object.keys(el).toString()
+                                    }
+                                    name={Object.keys(el)}
+                                    onClick={(event) => {
+                                        setNewTransactionCategory(event)
+                                    }}
                                 >
                                     <SvgComponent
-                                        content={el}
-                                        isActive={categoryDefiner(
-                                            activeCategory
-                                        )?.toLowerCase()}
+                                        content={Object.keys(el)}
+                                        isActive={
+                                            activeCategory ===
+                                            Object.keys(el).toString()
+                                        }
                                     ></SvgComponent>
-                                    <span>{categoriesRu[index]}</span>
+                                    <span>{Object.values(el)}</span>
                                 </S.Category>
                             )
                         })}

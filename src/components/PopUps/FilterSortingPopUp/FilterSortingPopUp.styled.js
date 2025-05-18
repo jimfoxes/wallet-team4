@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
     position: absolute;
+    z-index: 50;
     width: ${function ({ $isCategory }) {
         return $isCategory ? '176px' : '106px'
     }};
@@ -41,7 +42,7 @@ export const ListItem = styled.li`
 
     background-color: ${function ({ $filter, $sorting }) {
         return $filter || $sorting
-            ? '  rgba(219, 255, 233, 1)'
+            ? 'rgba(219, 255, 233, 1)'
             : 'rgba(244, 245, 246, 1)'
     }};
 

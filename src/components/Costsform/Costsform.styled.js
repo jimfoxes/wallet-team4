@@ -66,7 +66,7 @@ export const Category = styled.div`
 
     background-color: ${function ({ $filter, $sorting }) {
         return $filter || $sorting
-            ? '  rgba(219, 255, 233, 1)'
+            ? 'rgba(219, 255, 233, 1)'
             : 'rgba(244, 245, 246, 1)'
     }};
 

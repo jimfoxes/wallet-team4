@@ -1,21 +1,12 @@
 export const LS_USER = 'localUser'
 
-export const categoriesRu = [
-    'Еда',
-    'Транспорт',
-    'Жилье',
-    'Развлечения',
-    'Образование',
-    'Другое',
-]
-
-export const categoriesEng = [
-    'food',
-    'transport',
-    'housing',
-    'joy',
-    'education',
-    'others',
+export const categories = [
+    { food: 'Еда' },
+    { transport: 'Транспорт' },
+    { housing: 'Жилье' },
+    { joy: 'Развлечения' },
+    { education: 'Образование' },
+    { others: 'Другое' },
 ]
 
 export function categoryDefiner(category) {
@@ -32,6 +23,25 @@ export function categoryDefiner(category) {
             return 'Образование'
         case 'others':
             return 'Другое'
+        default:
+            break
+    }
+}
+
+export function categorySetter(category) {
+    switch (category) {
+        case 'Еда':
+            return 'food'
+        case 'Транспорт':
+            return 'transport'
+        case 'Жилье':
+            return 'housing'
+        case 'Развлечения':
+            return 'joy'
+        case 'Образование':
+            return 'education'
+        case 'Другое':
+            return 'others'
         default:
             break
     }
@@ -85,4 +95,32 @@ export function formErrors(
 
     errorsFunction(errorsObject)
     return isCorrect
+}
+
+export function columnsHeightDefiner(dataTransactions) {
+    const categoriesAmount = { totalSum: 0, maxHeight: 329 }
+
+    const amountByCategories = dataTransactions.map((transaction) => {
+        categoriesAmount.totalSum += transaction.sum
+
+        if (transaction.category in categoriesAmount) {
+            categoriesAmount[transaction.category] += transaction.sum
+        } else {
+            categoriesAmount[transaction.category] = transaction.sum
+        }
+    })
+
+    return categoriesAmount
+}
+
+export function sumFormat(str) {
+    const length = str.length
+    const chars = str.split('')
+
+    const strWithSpaces = chars.reduceRight((acc, char, index) => {
+        const spaceOrNothing = (length - index) % 3 === 0 ? ' ' : ''
+        return spaceOrNothing + char + acc
+    }, '')
+
+    return strWithSpaces[0] === ' ' ? strWithSpaces.slice(1) : strWithSpaces
 }

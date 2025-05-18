@@ -1,7 +1,12 @@
 import { useContext } from 'react'
 import { deleteTransaction } from '../../services/transactionsHandler'
 
-import { categoryDefiner, correctDate, LS_USER } from '../../services/utilities'
+import {
+    categoryDefiner,
+    correctDate,
+    LS_USER,
+    sumFormat,
+} from '../../services/utilities'
 
 import * as S from './TransactionElement.styled'
 import { TransactionsContext } from '../../сontext/TransactionsContext'
@@ -22,7 +27,9 @@ function TransactionElement({ transaction }) {
             <S.TransactionElement>
                 {correctDate(transaction.date)}
             </S.TransactionElement>
-            <S.TransactionElement>{transaction.sum} ₽</S.TransactionElement>
+            <S.TransactionElement>
+                {sumFormat(transaction.sum.toString())} ₽
+            </S.TransactionElement>
 
             <S.TransactionManipulationsContainer>
                 <S.TransactionButtons
