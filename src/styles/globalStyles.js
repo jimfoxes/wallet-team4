@@ -6,6 +6,9 @@ const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
   }
 
+
+
+
   * {
       margin: 0;
       padding: 0;
@@ -55,6 +58,20 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     font-family: Montserrat;
     background-color: #f4f5f6;
+  }
+
+  .rdp-root {
+    padding: 2px 5px 5px 5px;
+    .rdp-month_caption{
+      padding: 0 10px;
+    }
+    
+    --rdp-accent-color: #1fa46c;
+    --rdp-day-height: 36px;
+    --rdp-day-width: 36px;
+    --rdp-day_button-height: 35px;
+    --rdp-day_button-width: 35px;
+    --rdp-disabled-opacity: 0.3;
   }
 `
 

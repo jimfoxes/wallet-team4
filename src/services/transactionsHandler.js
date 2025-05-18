@@ -44,3 +44,26 @@ export async function addTransaction(newTransactionInfo, token) {
         return error
     }
 }
+
+export async function updateTransaction(
+    transactionId,
+    updatedTransactionInfo,
+    token
+) {
+    try {
+        const data = await axios.patch(
+            url + '/' + transactionId,
+            updatedTransactionInfo,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                    'Content-Type': '',
+                },
+            }
+        )
+
+        return data
+    } catch (error) {
+        return error
+    }
+}
