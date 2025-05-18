@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     CalendarWrapper,
     Header,
@@ -21,10 +21,12 @@ import {
     YearWrapper,
 } from './calendar.styled.js'
 
-const Calendar = () => {
+const Calendar = ({ onPeriodSelect }) => {
     const [mode, setMode] = useState('month')
     const [startDate, setStartDate] = useState(null)
     const [endDate, setEndDate] = useState(null)
+    const [startMonth, setStartMonth] = useState(null)
+    const [endMonth, setEndMonth] = useState(null)
 
     const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
@@ -118,9 +120,6 @@ const Calendar = () => {
         'Декабрь',
     ]
 
-    const [startMonth, setStartMonth] = useState(null)
-    const [endMonth, setEndMonth] = useState(null)
-
     const handleMonthClick = (year, month) => {
         const clicked = { year, month }
 
@@ -159,6 +158,25 @@ const Calendar = () => {
 
         return current > start && current < end
     }
+
+    useEffect(() => {
+        if (startDate && endDate) {
+            const from = startDate.toISOString().split('T')[0]
+            const to = endDate.toISOString().split('T')[0]
+            onPeriodSelect?.(from, to)
+        }
+    }, [startDate, endDate])
+
+    useEffect(() => {
+        if (startMonth && endMonth) {
+            const from = new Date(startMonth.year, startMonth.month, 1)
+            const to = new Date(endMonth.year, endMonth.month + 1, 0)
+            onPeriodSelect?.(
+                from.toISOString().split('T')[0],
+                to.toISOString().split('T')[0]
+            )
+        }
+    }, [startMonth, endMonth])
 
     return (
         <CalendarWrapper>

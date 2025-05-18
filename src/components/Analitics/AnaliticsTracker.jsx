@@ -10,7 +10,8 @@ import {
 
 import * as S from './Analitics.styled'
 
-const AnaliticsTracker = () => {
+
+const AnaliticsTracker = ({ transactions }) => {
     const dataTransactions = [
         {
             _id: '67e52357be69db1bb99a1b74',
@@ -221,6 +222,8 @@ const AnaliticsTracker = () => {
             sum: 2950,
         },
     ]
+
+
 
     const AnaliticsCategories = [
         {
