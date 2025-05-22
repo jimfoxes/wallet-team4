@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { format } from 'date-fns'
 
 const url = 'https://wedev-api.sky.pro/api/transactions'
 
@@ -46,7 +47,6 @@ export async function addTransaction(newTransactionInfo, token) {
 }
 
 export async function getFilteredTransactions({ token, filterAndSortParams }) {
-
     let filteredUrl = url
 
     if (
@@ -66,6 +66,12 @@ export async function getFilteredTransactions({ token, filterAndSortParams }) {
                 Authorization: 'Bearer ' + token,
             },
         })
+
+        return data
+    } catch (error) {
+        return error
+    }
+}
 
 export async function updateTransaction(
     transactionId,
@@ -87,5 +93,37 @@ export async function updateTransaction(
         return data
     } catch (error) {
         return error
+    }
+}
+
+const formatDateForApi = (date) => format(date, 'MM-dd-yyyy')
+
+export const handlePeriodSelect = async ({ start, end, token }) => {
+    console.log('FROM:', formatDateForApi(start))
+    console.log('TO:', formatDateForApi(end))
+    const testUrl = url + '/' + 'period'
+    console.log(testUrl)
+    const testObject = JSON.stringify({
+        start: formatDateForApi(start),
+        end: formatDateForApi(end),
+    })
+    console.log(testObject)
+    try {
+        const res = await axios.post(
+            url + '/' + 'period',
+            JSON.stringify({
+                start: formatDateForApi(start),
+                end: formatDateForApi(end),
+            }),
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': '',
+                },
+            }
+        )
+        return res
+    } catch (err) {
+        return err
     }
 }
