@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     CalendarWrapper,
     Header,
@@ -21,6 +21,7 @@ import {
     YearWrapper,
 } from './calendar.styled.js'
 import { handlePeriodSelect } from '../../services/transactionsHandler.js'
+import { LS_USER } from '../../services/utilities.js'
 
 const Calendar = ({ setAnalyticsData }) => {
     const [mode, setMode] = useState('month')
@@ -28,6 +29,7 @@ const Calendar = ({ setAnalyticsData }) => {
     const [endDate, setEndDate] = useState(null)
     const [startMonth, setStartMonth] = useState(null)
     const [endMonth, setEndMonth] = useState(null)
+    const [isSelecting, setIsSelecting] = useState(false)
 
     const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
@@ -71,14 +73,17 @@ const Calendar = ({ setAnalyticsData }) => {
         const clickedDate = new Date(year, month, day)
 
         if (!startDate || (startDate && endDate)) {
+            setIsSelecting(true)
             setStartDate(clickedDate)
             setEndDate(null)
         } else if (startDate && !endDate) {
             if (clickedDate > startDate) {
                 setEndDate(clickedDate)
+                setIsSelecting(false)
             } else {
                 setEndDate(startDate)
                 setStartDate(clickedDate)
+                setIsSelecting(false)
             }
         }
     }
@@ -103,16 +108,16 @@ const Calendar = ({ setAnalyticsData }) => {
         }
     }
 
-    const token = JSON.parse(localStorage.getItem('user'))?.token
+    const token = JSON.parse(localStorage.getItem(LS_USER)).token
 
-    const sendPeriod = () => {
+    const sendPeriod = useCallback(async () => {
         let start = null
         let end = null
 
-        if (startDate && endDate) {
+        if (mode === 'month' && startDate && endDate) {
             start = startDate
             end = endDate
-        } else if (startMonth && endMonth) {
+        } else if (mode === 'year' && startMonth && endMonth) {
             start = new Date(startMonth.year, startMonth.month, 1)
             end = new Date(endMonth.year, endMonth.month + 1, 0)
         }
@@ -120,20 +125,46 @@ const Calendar = ({ setAnalyticsData }) => {
         if (start && end) {
             console.log('SEND PERIOD ->', start, end)
             //            onPeriodSelect?.({ start, end })
-            handlePeriodSelect({ start, end, token }).then((response) =>
-                console.log(response)
-            )
+            try {
+                const transactions = await handlePeriodSelect({
+                    start,
+                    end,
+                    token,
+                })
+                setAnalyticsData(transactions)
+                console.log('6666', transactions)
+            } catch (error) {
+                console.error('Failed to fetch transactions:', error)
+            }
         }
-    }
+    }, [
+        mode,
+        startDate,
+        endDate,
+        startMonth,
+        endMonth,
+        token,
+        setAnalyticsData,
+    ])
 
     useEffect(() => {
-        const hasFullDayRange = startDate && endDate
-        const hasFullMonthRange = startMonth && endMonth
+        const hasFullDayRange =
+            mode === 'month' && startDate && endDate && !isSelecting
+        const hasFullMonthRange =
+            mode === 'year' && startMonth && endMonth && !isSelecting
 
         if (hasFullDayRange || hasFullMonthRange) {
             sendPeriod()
         }
-    }, [startDate, endDate, startMonth, endMonth])
+    }, [
+        sendPeriod,
+        startDate,
+        endDate,
+        startMonth,
+        endMonth,
+        isSelecting,
+        mode,
+    ])
 
     const isSelected = (year, month, day) => {
         if (!day) return false
@@ -200,6 +231,17 @@ const Calendar = ({ setAnalyticsData }) => {
         return years
     }
 
+    const handleModeChange = (newMode) => {
+        if (mode !== newMode) {
+            setStartDate(null)
+            setEndDate(null)
+            setStartMonth(null)
+            setEndMonth(null)
+            setIsSelecting(false)
+            setMode(newMode)
+        }
+    }
+
     return (
         <CalendarWrapper>
             <Header>
@@ -208,13 +250,13 @@ const Calendar = ({ setAnalyticsData }) => {
                     <ButtonBlock>
                         <Button
                             $active={mode === 'month'}
-                            onClick={() => setMode('month')}
+                            onClick={() => handleModeChange('month')}
                         >
                             Месяц
                         </Button>
                         <Button
                             $active={mode === 'year'}
-                            onClick={() => setMode('year')}
+                            onClick={() => handleModeChange('year')}
                         >
                             Год
                         </Button>

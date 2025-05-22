@@ -96,7 +96,7 @@ export async function updateTransaction(
     }
 }
 
-const formatDateForApi = (date) => format(date, 'MM-dd-yyyy')
+const formatDateForApi = (date) => format(date, 'M-d-yyyy')
 
 export const handlePeriodSelect = async ({ start, end, token }) => {
     console.log('FROM:', formatDateForApi(start))
@@ -109,12 +109,12 @@ export const handlePeriodSelect = async ({ start, end, token }) => {
     })
     console.log(testObject)
     try {
-        const res = await axios.post(
+        const response = await axios.post(
             url + '/' + 'period',
-            JSON.stringify({
+            {
                 start: formatDateForApi(start),
                 end: formatDateForApi(end),
-            }),
+            },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -122,8 +122,9 @@ export const handlePeriodSelect = async ({ start, end, token }) => {
                 },
             }
         )
-        return res
+        return response.data
     } catch (err) {
-        return err
+        console.error('Error fetching period transactions:', err)
+        throw err
     }
 }
