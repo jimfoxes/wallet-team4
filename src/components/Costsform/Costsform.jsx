@@ -241,7 +241,6 @@ function Costsform() {
                             return (
                                 <S.Category
                                     key={index}
-
                                     $filter={
                                         newTransactionInfo.category ===
                                         Object.keys(el).toString()
@@ -250,7 +249,6 @@ function Costsform() {
                                     onClick={(event) => {
                                         setNewTransactionCategory(event)
                                     }}
-
                                 >
                                     <SvgComponent
                                         content={Object.keys(el)}

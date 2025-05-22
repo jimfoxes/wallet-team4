@@ -46,7 +46,6 @@ export async function addTransaction(newTransactionInfo, token) {
 }
 
 export async function getFilteredTransactions({ token, filterAndSortParams }) {
-
     let filteredUrl = url
 
     if (
@@ -66,6 +65,12 @@ export async function getFilteredTransactions({ token, filterAndSortParams }) {
                 Authorization: 'Bearer ' + token,
             },
         })
+
+        return data
+    } catch (error) {
+        return error
+    }
+}
 
 export async function updateTransaction(
     transactionId,

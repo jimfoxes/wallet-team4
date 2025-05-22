@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import AnaliticsTracker from './AnaliticsTracker'
-import Calendar from '../Calendar/Calendar'
+import Calendar from '../calendar/calendar'
 import * as S from './Analitics.styled'
 
 const Analitics = () => {
     const [analyticsData, setAnalyticsData] = useState([])
     const token = JSON.parse(localStorage.getItem('user'))?.token
 
-    const handlePeriodSelect = async (from, to) => {
+    const handlePeriodSelect = async ({fromTo}) => {
         try {
             const res = await fetch(
-                `https://wedev-api.sky.pro/api/transactions/period?from=${from}&to=${to}`,
+                `https://wedev-api.sky.pro/api/transactions/period`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
+                        'Content-Type': '',
                     },
                 }
             )

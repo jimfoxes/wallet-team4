@@ -163,9 +163,10 @@ const Calendar = ({ onPeriodSelect }) => {
         if (startDate && endDate) {
             const from = startDate.toISOString().split('T')[0]
             const to = endDate.toISOString().split('T')[0]
+            console.log(from, to)
             onPeriodSelect?.(from, to)
         }
-    }, [startDate, endDate])
+    }, [onPeriodSelect, startDate, endDate])
 
     useEffect(() => {
         if (startMonth && endMonth) {
@@ -176,7 +177,7 @@ const Calendar = ({ onPeriodSelect }) => {
                 to.toISOString().split('T')[0]
             )
         }
-    }, [startMonth, endMonth])
+    }, [onPeriodSelect, startMonth, endMonth])
 
     return (
         <CalendarWrapper>
