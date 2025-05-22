@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     CalendarWrapper,
     Header,
@@ -20,8 +20,9 @@ import {
     MonthButton,
     YearWrapper,
 } from './calendar.styled.js'
+import { handlePeriodSelect } from '../../services/transactionsHandler.js'
 
-const Calendar = ({ onPeriodSelect }) => {
+const Calendar = ({ setAnalyticsData }) => {
     const [mode, setMode] = useState('month')
     const [startDate, setStartDate] = useState(null)
     const [endDate, setEndDate] = useState(null)
@@ -82,6 +83,58 @@ const Calendar = ({ onPeriodSelect }) => {
         }
     }
 
+    const handleMonthClick = (year, month) => {
+        const clicked = { year, month }
+
+        if (!startMonth || (startMonth && endMonth)) {
+            setStartMonth(clicked)
+            setEndMonth(null)
+        } else if (startMonth && !endMonth) {
+            if (
+                clicked.year > startMonth.year ||
+                (clicked.year === startMonth.year &&
+                    clicked.month > startMonth.month)
+            ) {
+                setEndMonth(clicked)
+            } else {
+                setEndMonth(startMonth)
+                setStartMonth(clicked)
+            }
+        }
+    }
+
+    const token = JSON.parse(localStorage.getItem('user'))?.token
+
+    const sendPeriod = () => {
+        let start = null
+        let end = null
+
+        if (startDate && endDate) {
+            start = startDate
+            end = endDate
+        } else if (startMonth && endMonth) {
+            start = new Date(startMonth.year, startMonth.month, 1)
+            end = new Date(endMonth.year, endMonth.month + 1, 0)
+        }
+
+        if (start && end) {
+            console.log('SEND PERIOD ->', start, end)
+            //            onPeriodSelect?.({ start, end })
+            handlePeriodSelect({ start, end, token }).then((response) =>
+                console.log(response)
+            )
+        }
+    }
+
+    useEffect(() => {
+        const hasFullDayRange = startDate && endDate
+        const hasFullMonthRange = startMonth && endMonth
+
+        if (hasFullDayRange || hasFullMonthRange) {
+            sendPeriod()
+        }
+    }, [startDate, endDate, startMonth, endMonth])
+
     const isSelected = (year, month, day) => {
         if (!day) return false
         const current = new Date(year, month, day)
@@ -96,6 +149,25 @@ const Calendar = ({ onPeriodSelect }) => {
         if (!day || !startDate || !endDate) return false
         const current = new Date(year, month, day)
         return current > startDate && current < endDate
+    }
+
+    const isMonthSelected = (year, month) => {
+        return (
+            (startMonth &&
+                startMonth.year === year &&
+                startMonth.month === month) ||
+            (endMonth && endMonth.year === year && endMonth.month === month)
+        )
+    }
+
+    const isMonthInRange = (year, month) => {
+        if (!startMonth || !endMonth) return false
+
+        const start = new Date(startMonth.year, startMonth.month)
+        const end = new Date(endMonth.year, endMonth.month)
+        const current = new Date(year, month)
+
+        return current > start && current < end
     }
 
     const currentDate = new Date()
@@ -120,63 +192,13 @@ const Calendar = ({ onPeriodSelect }) => {
         'Декабрь',
     ]
 
-    const handleMonthClick = (year, month) => {
-        const clicked = { year, month }
-
-        if (!startMonth || (startMonth && endMonth)) {
-            setStartMonth(clicked)
-            setEndMonth(null)
-        } else if (startMonth && !endMonth) {
-            if (
-                clicked.year > startMonth.year ||
-                (clicked.year === startMonth.year &&
-                    clicked.month > startMonth.month)
-            ) {
-                setEndMonth(clicked)
-            } else {
-                setEndMonth(startMonth)
-                setStartMonth(clicked)
-            }
+    const generateYears = (start, end) => {
+        const years = []
+        for (let year = start; year <= end; year++) {
+            years.push(year)
         }
+        return years
     }
-
-    const isMonthSelected = (year, month) => {
-        return (
-            (startMonth &&
-                startMonth.year === year &&
-                startMonth.month === month) ||
-            (endMonth && endMonth.year === year && endMonth.month === month)
-        )
-    }
-
-    const isMonthInRange = (year, month) => {
-        if (!startMonth || !endMonth) return false
-
-        const start = new Date(startMonth.year, startMonth.month)
-        const end = new Date(endMonth.year, endMonth.month)
-        const current = new Date(year, month)
-
-        return current > start && current < end
-    }
-
-    useEffect(() => {
-        if (startDate && endDate) {
-            const from = startDate.toISOString().split('T')[0]
-            const to = endDate.toISOString().split('T')[0]
-            onPeriodSelect?.(from, to)
-        }
-    }, [startDate, endDate])
-
-    useEffect(() => {
-        if (startMonth && endMonth) {
-            const from = new Date(startMonth.year, startMonth.month, 1)
-            const to = new Date(endMonth.year, endMonth.month + 1, 0)
-            onPeriodSelect?.(
-                from.toISOString().split('T')[0],
-                to.toISOString().split('T')[0]
-            )
-        }
-    }, [startMonth, endMonth])
 
     return (
         <CalendarWrapper>
@@ -210,11 +232,7 @@ const Calendar = ({ onPeriodSelect }) => {
                     </>
                 )}
 
-                {mode === 'year' && (
-                    <>
-                        <Divider />
-                    </>
-                )}
+                {mode === 'year' && <Divider />}
             </Header>
 
             <Content>
@@ -298,11 +316,3 @@ const Calendar = ({ onPeriodSelect }) => {
 }
 
 export default Calendar
-
-const generateYears = (start, end) => {
-    const years = []
-    for (let year = start; year <= end; year++) {
-        years.push(year)
-    }
-    return years
-}
