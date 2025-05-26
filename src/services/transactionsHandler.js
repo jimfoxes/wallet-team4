@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { format } from 'date-fns'
 
 const url = 'https://wedev-api.sky.pro/api/transactions'
 
@@ -92,5 +93,38 @@ export async function updateTransaction(
         return data
     } catch (error) {
         return error
+    }
+}
+
+const formatDateForApi = (date) => format(date, 'M-d-yyyy')
+
+export const handlePeriodSelect = async ({ start, end, token }) => {
+    console.log('FROM:', formatDateForApi(start))
+    console.log('TO:', formatDateForApi(end))
+    const testUrl = url + '/' + 'period'
+    console.log(testUrl)
+    const testObject = JSON.stringify({
+        start: formatDateForApi(start),
+        end: formatDateForApi(end),
+    })
+    console.log(testObject)
+    try {
+        const response = await axios.post(
+            url + '/' + 'period',
+            {
+                start: formatDateForApi(start),
+                end: formatDateForApi(end),
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': '',
+                },
+            }
+        )
+        return response.data
+    } catch (err) {
+        console.error('Error fetching period transactions:', err)
+        throw err
     }
 }

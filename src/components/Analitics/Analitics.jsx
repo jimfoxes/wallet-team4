@@ -5,33 +5,13 @@ import * as S from './Analitics.styled'
 
 const Analitics = () => {
     const [analyticsData, setAnalyticsData] = useState([])
-    const token = JSON.parse(localStorage.getItem('user'))?.token
-
-    const handlePeriodSelect = async ({fromTo}) => {
-        try {
-            const res = await fetch(
-                `https://wedev-api.sky.pro/api/transactions/period`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': '',
-                    },
-                }
-            )
-            const data = await res.json()
-            console.log('Полученные транзакции:', data)
-            setAnalyticsData(data.transactions || [])
-        } catch (err) {
-            console.error('Ошибка загрузки данных:', err)
-        }
-    }
 
     return (
         <S.analiticsMain>
             <S.Title>Анализ расходов</S.Title>
             <S.analiticsContent>
-                <Calendar onPeriodSelect={handlePeriodSelect} />
-                <AnaliticsTracker transactions={analyticsData} />
+                <Calendar setAnalyticsData={setAnalyticsData} />
+                <AnaliticsTracker analyticsData={analyticsData} />
             </S.analiticsContent>
         </S.analiticsMain>
     )

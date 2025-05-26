@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     CalendarWrapper,
     Header,
@@ -20,13 +20,16 @@ import {
     MonthButton,
     YearWrapper,
 } from './calendar.styled.js'
+import { handlePeriodSelect } from '../../services/transactionsHandler.js'
+import { LS_USER } from '../../services/utilities.js'
 
-const Calendar = ({ onPeriodSelect }) => {
+const Calendar = ({ setAnalyticsData }) => {
     const [mode, setMode] = useState('month')
     const [startDate, setStartDate] = useState(null)
     const [endDate, setEndDate] = useState(null)
     const [startMonth, setStartMonth] = useState(null)
     const [endMonth, setEndMonth] = useState(null)
+    const [isSelecting, setIsSelecting] = useState(false)
 
     const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
@@ -70,17 +73,98 @@ const Calendar = ({ onPeriodSelect }) => {
         const clickedDate = new Date(year, month, day)
 
         if (!startDate || (startDate && endDate)) {
+            setIsSelecting(true)
             setStartDate(clickedDate)
             setEndDate(null)
         } else if (startDate && !endDate) {
             if (clickedDate > startDate) {
                 setEndDate(clickedDate)
+                setIsSelecting(false)
             } else {
                 setEndDate(startDate)
                 setStartDate(clickedDate)
+                setIsSelecting(false)
             }
         }
     }
+
+    const handleMonthClick = (year, month) => {
+        const clicked = { year, month }
+
+        if (!startMonth || (startMonth && endMonth)) {
+            setStartMonth(clicked)
+            setEndMonth(null)
+        } else if (startMonth && !endMonth) {
+            if (
+                clicked.year > startMonth.year ||
+                (clicked.year === startMonth.year &&
+                    clicked.month > startMonth.month)
+            ) {
+                setEndMonth(clicked)
+            } else {
+                setEndMonth(startMonth)
+                setStartMonth(clicked)
+            }
+        }
+    }
+
+    const token = JSON.parse(localStorage.getItem(LS_USER)).token
+
+    const sendPeriod = useCallback(async () => {
+        let start = null
+        let end = null
+
+        if (mode === 'month' && startDate && endDate) {
+            start = startDate
+            end = endDate
+        } else if (mode === 'year' && startMonth && endMonth) {
+            start = new Date(startMonth.year, startMonth.month, 1)
+            end = new Date(endMonth.year, endMonth.month + 1, 0)
+        }
+
+        if (start && end) {
+            console.log('SEND PERIOD ->', start, end)
+            //            onPeriodSelect?.({ start, end })
+            try {
+                const transactions = await handlePeriodSelect({
+                    start,
+                    end,
+                    token,
+                })
+                setAnalyticsData(transactions)
+                console.log('6666', transactions)
+            } catch (error) {
+                console.error('Failed to fetch transactions:', error)
+            }
+        }
+    }, [
+        mode,
+        startDate,
+        endDate,
+        startMonth,
+        endMonth,
+        token,
+        setAnalyticsData,
+    ])
+
+    useEffect(() => {
+        const hasFullDayRange =
+            mode === 'month' && startDate && endDate && !isSelecting
+        const hasFullMonthRange =
+            mode === 'year' && startMonth && endMonth && !isSelecting
+
+        if (hasFullDayRange || hasFullMonthRange) {
+            sendPeriod()
+        }
+    }, [
+        sendPeriod,
+        startDate,
+        endDate,
+        startMonth,
+        endMonth,
+        isSelecting,
+        mode,
+    ])
 
     const isSelected = (year, month, day) => {
         if (!day) return false
@@ -97,6 +181,26 @@ const Calendar = ({ onPeriodSelect }) => {
         const current = new Date(year, month, day)
         return current > startDate && current < endDate
     }
+
+    const isMonthSelected = (year, month) => {
+        return (
+            (startMonth &&
+                startMonth.year === year &&
+                startMonth.month === month) ||
+            (endMonth && endMonth.year === year && endMonth.month === month)
+        )
+    }
+
+    const isMonthInRange = (year, month) => {
+        if (!startMonth || !endMonth) return false
+
+        const start = new Date(startMonth.year, startMonth.month)
+        const end = new Date(endMonth.year, endMonth.month)
+        const current = new Date(year, month)
+
+        return current > start && current < end
+    }
+
 
     const currentDate = new Date()
     const months = generateMonths(
@@ -120,64 +224,26 @@ const Calendar = ({ onPeriodSelect }) => {
         'Декабрь',
     ]
 
-    const handleMonthClick = (year, month) => {
-        const clicked = { year, month }
+    const generateYears = (start, end) => {
+        const years = []
+        for (let year = start; year <= end; year++) {
+            years.push(year)
+        }
+        return years
+    }
 
-        if (!startMonth || (startMonth && endMonth)) {
-            setStartMonth(clicked)
+
+    const handleModeChange = (newMode) => {
+        if (mode !== newMode) {
+            setStartDate(null)
+            setEndDate(null)
+            setStartMonth(null)
             setEndMonth(null)
-        } else if (startMonth && !endMonth) {
-            if (
-                clicked.year > startMonth.year ||
-                (clicked.year === startMonth.year &&
-                    clicked.month > startMonth.month)
-            ) {
-                setEndMonth(clicked)
-            } else {
-                setEndMonth(startMonth)
-                setStartMonth(clicked)
-            }
+            setIsSelecting(false)
+            setMode(newMode)
         }
     }
 
-    const isMonthSelected = (year, month) => {
-        return (
-            (startMonth &&
-                startMonth.year === year &&
-                startMonth.month === month) ||
-            (endMonth && endMonth.year === year && endMonth.month === month)
-        )
-    }
-
-    const isMonthInRange = (year, month) => {
-        if (!startMonth || !endMonth) return false
-
-        const start = new Date(startMonth.year, startMonth.month)
-        const end = new Date(endMonth.year, endMonth.month)
-        const current = new Date(year, month)
-
-        return current > start && current < end
-    }
-
-    useEffect(() => {
-        if (startDate && endDate) {
-            const from = startDate.toISOString().split('T')[0]
-            const to = endDate.toISOString().split('T')[0]
-            console.log(from, to)
-            onPeriodSelect?.(from, to)
-        }
-    }, [onPeriodSelect, startDate, endDate])
-
-    useEffect(() => {
-        if (startMonth && endMonth) {
-            const from = new Date(startMonth.year, startMonth.month, 1)
-            const to = new Date(endMonth.year, endMonth.month + 1, 0)
-            onPeriodSelect?.(
-                from.toISOString().split('T')[0],
-                to.toISOString().split('T')[0]
-            )
-        }
-    }, [onPeriodSelect, startMonth, endMonth])
 
     return (
         <CalendarWrapper>
@@ -187,13 +253,13 @@ const Calendar = ({ onPeriodSelect }) => {
                     <ButtonBlock>
                         <Button
                             $active={mode === 'month'}
-                            onClick={() => setMode('month')}
+                            onClick={() => handleModeChange('month')}
                         >
                             Месяц
                         </Button>
                         <Button
                             $active={mode === 'year'}
-                            onClick={() => setMode('year')}
+                            onClick={() => handleModeChange('year')}
                         >
                             Год
                         </Button>
@@ -211,11 +277,7 @@ const Calendar = ({ onPeriodSelect }) => {
                     </>
                 )}
 
-                {mode === 'year' && (
-                    <>
-                        <Divider />
-                    </>
-                )}
+                {mode === 'year' && <Divider />}
             </Header>
 
             <Content>
@@ -299,11 +361,3 @@ const Calendar = ({ onPeriodSelect }) => {
 }
 
 export default Calendar
-
-const generateYears = (start, end) => {
-    const years = []
-    for (let year = start; year <= end; year++) {
-        years.push(year)
-    }
-    return years
-}
