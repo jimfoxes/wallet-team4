@@ -11,7 +11,7 @@ const Analitics = () => {
             <S.Title>Анализ расходов</S.Title>
             <S.analiticsContent>
                 <Calendar setAnalyticsData={setAnalyticsData} />
-                <AnaliticsTracker transactions={analyticsData} />
+                <AnaliticsTracker analyticsData={analyticsData} />
             </S.analiticsContent>
         </S.analiticsMain>
     )
