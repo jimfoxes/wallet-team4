@@ -201,6 +201,7 @@ const Calendar = ({ setAnalyticsData }) => {
         return current > start && current < end
     }
 
+
     const currentDate = new Date()
     const months = generateMonths(
         currentDate.getFullYear(),
@@ -231,6 +232,7 @@ const Calendar = ({ setAnalyticsData }) => {
         return years
     }
 
+
     const handleModeChange = (newMode) => {
         if (mode !== newMode) {
             setStartDate(null)
@@ -241,6 +243,7 @@ const Calendar = ({ setAnalyticsData }) => {
             setMode(newMode)
         }
     }
+
 
     return (
         <CalendarWrapper>
