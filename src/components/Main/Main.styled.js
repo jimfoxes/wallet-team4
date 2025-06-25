@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { NavLink } from 'react-router-dom'
 
 export const OverlayWrapper = styled.div`
     position: absolute;
@@ -15,19 +16,58 @@ export const Title = styled.h1`
     margin: 36px 0 32px 0;
     text-align: start;
     padding-left: calc(50% - 600px);
-
     min-width: 235px;
     height: 48px;
+
+    @media (max-width: 375px) {
+        display: none;
+    }
+`
+
+export const MobileTitleWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-end;
+    gap: 58px;
+    padding-left: 16px;
+    height: 51px;
+    background-color: #ffffff;
+
+    @media (min-width: 376px) {
+        display: none;
+    }
+`
+
+export const MobileTitle = styled.h1`
+    width: 175px;
+    height: 29px;
+    font-size: 24px;
+    line-height: 100%;
+`
+
+export const MobileNewTransaction = styled(NavLink)`
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 150%;
+    letter-spacing: 0px;
 `
 
 export const Container = styled.div`
     height: calc(100vh - 64px);
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 20px;
+    grid-gap: 20px;
     overflow: hidden;
     padding-right: calc(50% - 600px);
     padding-left: calc(50% - 600px);
+
+    @media (max-width: 1200px) {
+        grid-template-rows: repeat(2, 618px);
+    }
 `
 
 export const TitleContainer = styled.h1`
@@ -49,12 +89,22 @@ export const CostsTable = styled.div`
     overflow-y: ${function ({ $blockScroll }) {
         return $blockScroll ? 'hidden' : 'scroll'
     }};
+
+    @media (max-width: 1200px) {
+        grid-column-start: 1;
+        width: 789px;
+        border-radius: 0px;
+    }
 `
 
 export const HeaderCostsTable = styled.div`
     display: flex;
     margin: 32px;
     justify-content: space-between;
+
+    @media (max-width: 375px) {
+        margin: 21px 0px 0px 0px;
+    }
 `
 
 export const TitleCostsTable = styled.h2`
@@ -62,6 +112,10 @@ export const TitleCostsTable = styled.h2`
     font-weight: 700;
     font-size: 24px;
     text-align: left;
+
+    @media (max-width: 375px) {
+        display: none;
+    }
 `
 
 export const FilterSortingContainer = styled.div`
@@ -71,6 +125,11 @@ export const FilterSortingContainer = styled.div`
 
     height: 30px;
     padding-top: 12px;
+
+    @media (max-width: 375px) {
+        padding: 0px 0px 24px 16px;
+        height: 15px;
+    }
 `
 
 export const FilterSortingElement = styled.div`
@@ -88,6 +147,11 @@ export const FilterSortingElement = styled.div`
             return $isCategory ? '260px' : '160px'
         }};
 
+        @media (max-width: 375px) {
+            font-size: 10px;
+            letter-spacing: 0px;
+        }
+
         span {
             color: rgba(31, 164, 108, 1);
             text-decoration: underline;
@@ -103,6 +167,12 @@ export const ColumnsContainer = styled.div`
     gap: 32px;
     height: 15px;
     margin-left: 32px;
+
+    @media (max-width: 375px) {
+        gap: 16px;
+        margin-left: 16px;
+        height: 18px;
+    }
 `
 
 export const ColumnsElement = styled.h4`
@@ -114,7 +184,18 @@ export const ColumnsElement = styled.h4`
     letter-spacing: 0px;
     color: rgba(153, 153, 153, 1);
     text-align: start;
+
+    @media (max-width: 375px) {
+        width: 74px;
+        font-size: 10px;
+        line-height: 100%;
+
+        text-align: ${function ({ $mobileRight }) {
+            return $mobileRight ? 'end' : ''
+        }};
+    }
 `
+
 export const ColumnsShadowElement = styled.div`
     width: 36px;
 `
@@ -125,6 +206,11 @@ export const DemarcationLine = styled.div`
     border-top: 0.5px solid #999999;
     margin-top: 6px;
     margin-bottom: 18px;
+
+    @media (max-width: 375px) {
+        margin-top: 0px;
+        margin-bottom: 14px;
+    }
 `
 
 export const BlurWrapper = styled.div`
@@ -145,4 +231,13 @@ export const Costsform = styled.div`
     background-color: #ffffff;
     max-height: 618px;
     border-radius: 30px;
+
+    @media (max-width: 1200px) {
+        grid-column-start: 1;
+        width: 379px;
+    }
+
+    @media (max-width: 375px) {
+        display: none;
+    }
 `

@@ -26,6 +26,20 @@ export const Container = styled.div`
         flex-wrap: wrap;
         flex-direction: row;
     }
+
+    @media (max-width: 375px) {
+        top: 15px;
+        left: 0px;
+        padding: 10px;
+
+        width: ${function ({ $isCategory }) {
+            return $isCategory ? '130px' : '88px'
+        }};
+
+        height: ${function ({ $isCategory }) {
+            return $isCategory ? '206px' : '78px'
+        }};
+    }
 `
 
 export const ListItem = styled.li`
@@ -54,5 +68,22 @@ export const ListItem = styled.li`
         height: 15px;
         font-weight: 400;
         font-size: 12px;
+    }
+
+    @media (max-width: 375px) {
+        height: 26px;
+        padding: 7px 10px 7px 10px;
+        gap: 6px;
+
+        svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        span {
+            font-size: 10px;
+            line-height: 100%;
+            letter-spacing: 0px;
+        }
     }
 `

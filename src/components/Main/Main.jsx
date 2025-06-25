@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import FilterSortingPopUp from '../PopUps/FilterSortingPopUp/FilterSortingPopUp'
 import TransactionElement from '../TransactionElement/TransactionElement'
@@ -18,8 +19,15 @@ import * as S from './Main.styled'
 
 function Main() {
     const token = JSON.parse(localStorage.getItem(LS_USER)).token
-    const { transactionsList, setTransactionsList, loading, setLoading } =
-        useContext(TransactionsContext)
+    const {
+        transactionsList,
+        setTransactionsList,
+        setMobileHeaderNav,
+        loading,
+        setLoading,
+    } = useContext(TransactionsContext)
+
+    const navigate = useNavigate()
 
     const getTransactionsList = () => {
         setLoading(true)
@@ -130,19 +138,6 @@ function Main() {
         }
     }
 
-    // const filterRef = useRef()
-    // const sortingRef = useRef()
-    // // const filterAndSortParamsRef = useRef()
-
-    // useEffect(() => {
-    //     filterRef.current = []
-    //     sortingRef.current = ''
-    //     // filterAndSortParamsRef.current = {
-    //     //     filterBy: '',
-    //     //     sortBy: '',
-    //     // }
-    // }, [])
-
     function sortingSetter(event) {
         event.stopPropagation()
         event.preventDefault()
@@ -188,6 +183,35 @@ function Main() {
                 ''
             )}
             <S.Title>Мои расходы</S.Title>
+
+            <S.MobileTitleWrapper>
+                <S.MobileTitle>Мои расходы</S.MobileTitle>
+
+                <S.MobileNewTransaction
+                    onClick={(event) => {
+                        event.stopPropagation()
+                        event.preventDefault()
+                        setMobileHeaderNav('Новый расход')
+                        navigate('/mobileCostsform')
+                    }}
+                >
+                    <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M6.99984 1.16669C3.78567 1.16669 1.1665 3.78585 1.1665 7.00002C1.1665 10.2142 3.78567 12.8334 6.99984 12.8334C10.214 12.8334 12.8332 10.2142 12.8332 7.00002C12.8332 3.78585 10.214 1.16669 6.99984 1.16669ZM9.33317 7.43752H7.43734V9.33335C7.43734 9.57252 7.239 9.77085 6.99984 9.77085C6.76067 9.77085 6.56234 9.57252 6.56234 9.33335V7.43752H4.6665C4.42734 7.43752 4.229 7.23919 4.229 7.00002C4.229 6.76085 4.42734 6.56252 4.6665 6.56252H6.56234V4.66669C6.56234 4.42752 6.76067 4.22919 6.99984 4.22919C7.239 4.22919 7.43734 4.42752 7.43734 4.66669V6.56252H9.33317C9.57234 6.56252 9.77067 6.76085 9.77067 7.00002C9.77067 7.23919 9.57234 7.43752 9.33317 7.43752Z"
+                            fill="black"
+                        />
+                    </svg>
+
+                    <p>Новый расход</p>
+                </S.MobileNewTransaction>
+            </S.MobileTitleWrapper>
+
             <S.Container>
                 <S.CostsTable $blockScroll={filterPopUp || sortingPopUp}>
                     <S.HeaderCostsTable>
@@ -262,8 +286,12 @@ function Main() {
                     <S.ColumnsContainer>
                         <S.ColumnsElement>Описание</S.ColumnsElement>
                         <S.ColumnsElement>Категория</S.ColumnsElement>
-                        <S.ColumnsElement>Дата</S.ColumnsElement>
-                        <S.ColumnsElement>Сумма</S.ColumnsElement>
+                        <S.ColumnsElement $mobileRight={true}>
+                            Дата
+                        </S.ColumnsElement>
+                        <S.ColumnsElement $mobileRight={true}>
+                            Сумма
+                        </S.ColumnsElement>
                         <S.ColumnsShadowElement></S.ColumnsShadowElement>
                     </S.ColumnsContainer>
                     <S.DemarcationLine></S.DemarcationLine>
