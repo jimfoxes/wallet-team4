@@ -5,6 +5,7 @@ import MainPage from '../pages/Main'
 import AnaliticsPage from '../pages/Analitics'
 import SignInPage from '../pages/SignIn'
 import SignUpPage from '../pages/SignUp'
+import CalendarMobile from '../pages/CalendarMobile'
 import MobileCostsformPage from '../pages/Costsform'
 
 function AppRoutes() {
@@ -19,12 +20,15 @@ function AppRoutes() {
                     {/* Outlet */}
                 </Route>
 
+                <Route path="/calendar" element={<CalendarMobile />} />
+                  
                 <Route
                     path="/mobileCostsform"
                     element={<MobileCostsformPage />}
                 >
                     {/* Outlet */}
                 </Route>
+
             </Route>
 
             <Route path="/sign-in" element={<SignInPage />} />

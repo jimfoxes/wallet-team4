@@ -9,6 +9,14 @@ export const CalendarWrapper = styled.div`
     overflow: hidden;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 375px) {
+        width: 343px;
+        height: auto;
+        border-radius: 0;
+        box-shadow: none;
+        background: white;
+    }
 `
 
 export const Header = styled.div`
@@ -19,6 +27,11 @@ export const Header = styled.div`
     flex-shrink: 0;
     padding: 0 32px;
     padding-top: 32px;
+
+    @media (max-width: 375px) {
+        padding: 0;
+        padding-top: 12px;
+    }
 `
 
 export const HeaderTop = styled.div`
@@ -26,6 +39,10 @@ export const HeaderTop = styled.div`
     justify-content: space-between;
     align-items: flex-end;
     margin-bottom: 30px;
+
+    @media (max-width: 375px) {
+        margin-bottom: 16px;
+    }
 `
 
 export const Title = styled.h2`
@@ -68,12 +85,22 @@ export const Divider = styled.div`
     border: 0.5px solid rgb(153, 153, 153);
     width: calc(100% + 64px);
     margin: 0 -32px;
+
+    @media (max-width: 768px) {
+        position: absolute;
+        left: 0;
+        width: 100vw;
+    }
 `
 
 export const Content = styled.div`
     flex-grow: 1;
     overflow-y: auto;
     padding: 0 32px;
+
+    @media (max-width: 375px) {
+        padding: 0;
+    }
 `
 
 export const DaysOfWeek = styled.div`
@@ -156,6 +183,11 @@ export const EmptyCell = styled.div`
     width: 40px;
     height: 40px;
     margin: 3px;
+
+    @media (max-width: 375px) {
+        width: 44px;
+        height: 44px;
+    }
 `
 export const YearWrapper = styled.div`
     width: 313px;
@@ -211,5 +243,9 @@ export const MonthButton = styled.button`
     &:focus {
         outline: none;
         box-shadow: none;
+    }
+
+    @media (max-width: 375px) {
+        width: 110px;
     }
 `

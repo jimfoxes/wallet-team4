@@ -26,6 +26,14 @@ export const ModalBlock = styled.div`
     border-radius: 30px;
     border: none;
     box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
+
+    @media (max-width: 375px) {
+        max-width: 343px;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+        background-color: transparent;
+    }
 `
 
 export const ModalTitle = styled.div`

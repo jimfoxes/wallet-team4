@@ -30,6 +30,7 @@ const Calendar = ({ setAnalyticsData }) => {
     const [startMonth, setStartMonth] = useState(null)
     const [endMonth, setEndMonth] = useState(null)
     const [isSelecting, setIsSelecting] = useState(false)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
     const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
@@ -124,7 +125,10 @@ const Calendar = ({ setAnalyticsData }) => {
 
         if (start && end) {
             console.log('SEND PERIOD ->', start, end)
-            //            onPeriodSelect?.({ start, end })
+            localStorage.setItem(
+                'selectedPeriod',
+                JSON.stringify({ start, end })
+            )
             try {
                 const transactions = await handlePeriodSelect({
                     start,
@@ -201,7 +205,6 @@ const Calendar = ({ setAnalyticsData }) => {
         return current > start && current < end
     }
 
-
     const currentDate = new Date()
     const months = generateMonths(
         currentDate.getFullYear(),
@@ -232,7 +235,6 @@ const Calendar = ({ setAnalyticsData }) => {
         return years
     }
 
-
     const handleModeChange = (newMode) => {
         if (mode !== newMode) {
             setStartDate(null)
@@ -244,12 +246,22 @@ const Calendar = ({ setAnalyticsData }) => {
         }
     }
 
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768)
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
 
     return (
         <CalendarWrapper>
             <Header>
                 <HeaderTop>
-                    <Title>Период</Title>
+                    <Title $isMobile={isMobile}>
+                        {isMobile ? 'Выбор периода' : 'Период'}
+                    </Title>
                     <ButtonBlock>
                         <Button
                             $active={mode === 'month'}
