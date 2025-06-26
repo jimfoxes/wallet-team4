@@ -6,6 +6,7 @@ import AnaliticsPage from '../pages/Analitics'
 import SignInPage from '../pages/SignIn'
 import SignUpPage from '../pages/SignUp'
 import CalendarMobile from '../pages/CalendarMobile'
+import MobileCostsformPage from '../pages/Costsform'
 
 function AppRoutes() {
     return (
@@ -18,7 +19,16 @@ function AppRoutes() {
                 <Route path="/analytics" element={<AnaliticsPage />}>
                     {/* Outlet */}
                 </Route>
+
                 <Route path="/calendar" element={<CalendarMobile />} />
+                  
+                <Route
+                    path="/mobileCostsform"
+                    element={<MobileCostsformPage />}
+                >
+                    {/* Outlet */}
+                </Route>
+
             </Route>
 
             <Route path="/sign-in" element={<SignInPage />} />

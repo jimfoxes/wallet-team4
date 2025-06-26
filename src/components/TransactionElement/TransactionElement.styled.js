@@ -10,6 +10,17 @@ export const TransactionElement = styled.p`
     color: ${(props) =>
         props.$isActive ? 'rgba(31, 164, 108, 1)' : 'rgba(0, 0, 0, 1)'};
     text-align: start;
+
+    @media (max-width: 375px) {
+        width: 74px;
+        height: 12px;
+        font-size: 10px;
+        word-break: break-all;
+
+        text-align: ${function ({ $mobileRight }) {
+            return $mobileRight ? 'end' : ''
+        }};
+    }
 `
 
 export const TransactionContainer = styled.div`
@@ -21,6 +32,11 @@ export const TransactionContainer = styled.div`
     padding: 8px 0 4px 32px;
     background-color: ${(props) =>
         props.$isActive ? 'rgba(219, 255, 233, 1)' : 'transparent'};
+
+    @media (max-width: 375px) {
+        gap: 16px;
+        padding: 0px 0px 16px 16px;
+    }
 `
 
 export const TransactionManipulationsContainer = styled.div`
@@ -28,6 +44,10 @@ export const TransactionManipulationsContainer = styled.div`
     justify-content: flex-start;
     gap: 12px;
     width: 36px;
+
+    @media (max-width: 375px) {
+        display: none;
+    }
 `
 
 export const TransactionButtons = styled.button`

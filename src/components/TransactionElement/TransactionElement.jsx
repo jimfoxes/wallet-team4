@@ -33,13 +33,12 @@ function TransactionElement({ transaction }) {
             <S.TransactionElement $isActive={isActive}>
                 {categoryDefiner(transaction.category)}
             </S.TransactionElement>
-            <S.TransactionElement $isActive={isActive}>
+            <S.TransactionElement $isActive={isActive} $mobileRight={true}>
                 {correctDate(transaction.date)}
             </S.TransactionElement>
 
-            <S.TransactionElement $isActive={isActive}>
+            <S.TransactionElement $isActive={isActive} $mobileRight={true}>
                 {sumFormat(transaction.sum.toString())} ₽
-
             </S.TransactionElement>
 
             <S.TransactionManipulationsContainer>
