@@ -1,11 +1,43 @@
 import styled from 'styled-components'
 
+export const MobileBackToMain = styled.div`
+    display: flex;
+    flex-direction: row;
+    height: 42px;
+    gap: 6px;
+    background-color: #ffffff;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 16px;
+
+    p {
+        color: #999999;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 150%;
+        letter-spacing: 0px;
+    }
+
+    @media (min-width: 376px) {
+        display: none;
+    }
+`
+
 export const TitleCostsform = styled.h2`
     height: 30px;
     margin: 32px 0 24px 32px;
     font-weight: 700;
     font-size: 24px;
     text-align: left;
+
+    @media (max-width: 375px) {
+        background-color: #ffffff;
+        height: 41px;
+        margin: 0px;
+        line-height: 100%;
+        letter-spacing: 0px;
+        padding-left: 16px;
+    }
 `
 
 export const Costsform = styled.form`
@@ -14,6 +46,14 @@ export const Costsform = styled.form`
     display: flex;
     flex-direction: column;
     gap: 24px;
+
+    @media (max-width: 375px) {
+        background-color: #ffffff;
+        padding-left: 16px;
+        padding-right: 16px;
+        margin-left: 0px;
+        width: 375px;
+    }
 `
 
 export const CategoryContainer = styled.div`

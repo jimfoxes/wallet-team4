@@ -6,6 +6,7 @@ export const TransactionsProvider = ({ children }) => {
     const [transactionsList, setTransactionsList] = useState([])
     const [transactionId, setTransactionId] = useState('')
     const [loading, setLoading] = useState('')
+    const [mobileHeaderNav, setMobileHeaderNav] = useState('Мои расходы')
 
     return (
         <TransactionsContext.Provider
@@ -14,6 +15,8 @@ export const TransactionsProvider = ({ children }) => {
                 setTransactionsList,
                 transactionId,
                 setTransactionId,
+                mobileHeaderNav,
+                setMobileHeaderNav,
                 loading,
                 setLoading,
             }}
