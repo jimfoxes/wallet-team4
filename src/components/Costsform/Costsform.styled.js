@@ -8,7 +8,7 @@ export const MobileBackToMain = styled.div`
     background-color: #ffffff;
     justify-content: flex-start;
     align-items: center;
-    padding-left: 16px;
+    padding: 24px 16px;
 
     p {
         color: #999999;
@@ -36,7 +36,7 @@ export const TitleCostsform = styled.h2`
         margin: 0px;
         line-height: 100%;
         letter-spacing: 0px;
-        padding-left: 16px;
+        padding: 0 16px 24px;
     }
 `
 
@@ -82,10 +82,16 @@ export const TitleCategory = styled.label`
 
 export const DescriptionInput = styled.input`
     height: 39px;
-    border: 0.5px solid rgba(153, 153, 153, 1);
+    border: 0.5px solid ${(props) => (props.$valid ? '#1FA46C' : '#999999')};
     border-radius: 6px;
     padding: 12px;
     outline: none;
+    background-color: ${(props) => (props.$valid ? '#DBFFE9' : 'white')};
+
+    &:focus {
+        border: 0.5px solid ${(props) => (props.$valid ? '#1FA46C' : '#999999')};
+        background-color: ${(props) => (props.$valid ? '#DBFFE9' : 'white')};
+    }
 `
 export const CategoriesWrapper = styled.div`
     display: flex;
@@ -126,10 +132,11 @@ export const Category = styled.div`
 export const CategoriesContainer = styled.div``
 
 export const CostsformButton = styled.button`
-    height: 39;
+    height: 39px;
     border: none;
     border-radius: 6px;
     padding: 12px;
+    margin-top: 14px;
     background-color: rgba(31, 164, 108, 1);
     font-weight: 600;
     font-size: 12px;

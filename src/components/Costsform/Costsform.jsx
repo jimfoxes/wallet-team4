@@ -249,6 +249,10 @@ function Costsform() {
                         onChange={(event) => {
                             transactionInfoChange(event, false)
                         }}
+                        $valid={
+                            newTransactionInfo.description?.length >= 4 &&
+                            !errors.description
+                        }
                     />
                 </S.CategoryContainer>
 
@@ -298,6 +302,7 @@ function Costsform() {
                                 : ''
                         }
                         readOnly
+                        $valid={newTransactionInfo.date && !errors.date}
                     />
 
                     {showCalendar && (
@@ -325,6 +330,7 @@ function Costsform() {
                         onChange={(event) => {
                             transactionInfoChange(event, true)
                         }}
+                        $valid={newTransactionInfo.sum && !errors.sum}
                     />
                 </S.CategoryContainer>
 

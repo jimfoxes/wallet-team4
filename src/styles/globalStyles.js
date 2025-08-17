@@ -71,6 +71,10 @@ const GlobalStyle = createGlobalStyle`
     --rdp-day_button-width: 35px;
     --rdp-disabled-opacity: 0.3;
   }
+
+  input, button {
+    font-family: Montserrat;
+  }
 `
 
 export default GlobalStyle

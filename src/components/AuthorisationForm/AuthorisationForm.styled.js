@@ -15,6 +15,12 @@ export const Modal = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    @media (max-width: 375px) {
+        padding-right: calc(50% - 171px);
+        padding-left: calc(50% - 171px);
+        background-color: rgba(255, 255, 255, 1);
+    }
 `
 
 export const ModalBlock = styled.div`
@@ -124,6 +130,9 @@ export const ModalButton = styled.button`
         letter-spacing: 0px;
         color: rgba(255, 255, 255, 1);
     }
+    a:hover {
+        color: rgba(255, 255, 255, 1);
+    }
 `
 
 export const ModalFormFooter = styled.div`
@@ -140,5 +149,38 @@ export const ModalFormFooter = styled.div`
 
     a {
         text-decoration: underline;
+    }
+`
+
+export const header = styled.header`
+    width: 100%;
+    background-color: #ffffff;
+
+    @media (max-width: 375px) {
+        padding-right: calc(50% - 171px);
+        padding-left: calc(50% - 171px);
+        background-color: #f4f5f6;
+    }
+`
+
+export const headerBlock = styled.div`
+    padding-right: calc(50% - 600px);
+    padding-left: calc(50% - 600px);
+
+    height: 64px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    top: 0;
+    left: 0;
+`
+
+export const headerLogo = styled.div`
+    display: block;
+
+    @media (max-width: 1220px) {
+        padding-left: 16px;
     }
 `

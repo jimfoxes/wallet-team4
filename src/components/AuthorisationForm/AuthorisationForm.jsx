@@ -63,6 +63,15 @@ const AuthorisationForm = ({ isSignUp }) => {
 
     return (
         <S.Wrapper>
+            <S.header>
+                <S.headerBlock>
+                    <S.headerLogo>
+                        <a href="/">
+                            <img src="/images/logo.svg" alt="logo" />
+                        </a>
+                    </S.headerLogo>
+                </S.headerBlock>
+            </S.header>
             <S.Modal>
                 <S.ModalBlock>
                     <S.ModalTitle>
