@@ -78,19 +78,36 @@ export const TitleCategory = styled.label`
     line-height: 100%;
     letter-spacing: 0px;
     text-align: start;
+    position: relative;
+`
+
+export const RequiredStar = styled.span`
+    color: #f25050;
+    position: absolute;
+    top: -3px;
 `
 
 export const DescriptionInput = styled.input`
     height: 39px;
-    border: 0.5px solid ${(props) => (props.$valid ? '#1FA46C' : '#999999')};
+    border: 0.5px solid
+        ${(props) =>
+            props.$error ? '#F25050' : props.$valid ? '#1FA46C' : '#999999'};
     border-radius: 6px;
     padding: 12px;
     outline: none;
-    background-color: ${(props) => (props.$valid ? '#DBFFE9' : 'white')};
+    background-color: ${(props) =>
+        props.$error ? '#FFEBEB' : props.$valid ? '#DBFFE9' : 'white'};
 
     &:focus {
-        border: 0.5px solid ${(props) => (props.$valid ? '#1FA46C' : '#999999')};
-        background-color: ${(props) => (props.$valid ? '#DBFFE9' : 'white')};
+        border: 0.5px solid
+            ${(props) =>
+                props.$error
+                    ? '#F25050'
+                    : props.$valid
+                      ? '#1FA46C'
+                      : '#999999'};
+        background-color: ${(props) =>
+            props.$error ? '#FFEBEB' : props.$valid ? '#DBFFE9' : 'white'};
     }
 `
 export const CategoriesWrapper = styled.div`
@@ -105,13 +122,15 @@ export const Category = styled.div`
     border-radius: 30px;
     height: 31px;
     width: auto;
-    color: ${function ({ $filter, $sorting }) {
+    color: ${function ({ $filter, $sorting, $error }) {
+        if ($error) return '#F25050'
         return $filter || $sorting
             ? 'rgba(31, 164, 108, 1)'
             : 'rgba(0, 0, 0, 1)'
     }};
 
-    background-color: ${function ({ $filter, $sorting }) {
+    background-color: ${function ({ $filter, $sorting, $error }) {
+        if ($error) return '#FFEBEB'
         return $filter || $sorting
             ? 'rgba(219, 255, 233, 1)'
             : 'rgba(244, 245, 246, 1)'
@@ -137,12 +156,14 @@ export const CostsformButton = styled.button`
     border-radius: 6px;
     padding: 12px;
     margin-top: 14px;
-    background-color: rgba(31, 164, 108, 1);
+    background-color: ${(props) =>
+        props.$disabled ? '#999999' : 'rgba(31, 164, 108, 1)'};
     font-weight: 600;
     font-size: 12px;
     line-height: 100%;
     letter-spacing: 0px;
     color: rgba(255, 255, 255, 1);
+    cursor: ${(props) => (props.$disabled ? 'not-allowed' : 'pointer')};
 `
 export const CalendarWrapper = styled.div`
     position: absolute;
