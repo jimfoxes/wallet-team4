@@ -21,14 +21,13 @@ function AppRoutes() {
                 </Route>
 
                 <Route path="/calendar" element={<CalendarMobile />} />
-                  
+
                 <Route
-                    path="/mobileCostsform"
+                    path="/mobileCostsform/:id?"
                     element={<MobileCostsformPage />}
                 >
                     {/* Outlet */}
                 </Route>
-
             </Route>
 
             <Route path="/sign-in" element={<SignInPage />} />

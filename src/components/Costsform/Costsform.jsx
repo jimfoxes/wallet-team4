@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
-
+import { getTransactions } from '../../services/transactionsHandler'
 import SvgComponent from '../SvgComponent'
 import {
     addTransaction,
@@ -15,11 +15,17 @@ import { TransactionsContext } from '../../сontext/TransactionsContext'
 import * as S from './Costsform.styled'
 
 function Costsform() {
-    const { setMobileHeaderNav, setLoading, setTransactionsList, loading } =
-        useContext(TransactionsContext)
+    const { id } = useParams()
+    const {
+        setMobileHeaderNav,
+        setLoading,
+        transactionsList,
+        setTransactionsList,
+        transactionId,
+        setTransactionId,
+        loading,
+    } = useContext(TransactionsContext)
     const token = JSON.parse(localStorage.getItem(LS_USER)).token
-    const { transactionsList, transactionId, setTransactionId } =
-        useContext(TransactionsContext)
 
     const [isEditing, setIsEditing] = useState(false)
     const [newTransactionInfo, setNewTransactionInfo] = useState({})
@@ -36,10 +42,43 @@ function Costsform() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (transactionId) {
+        if (transactionsList.length === 0 && !loading) {
+            setLoading(true)
+            getTransactions(token)
+                .then((response) => {
+                    if (response.name !== 'AxiosError') {
+                        setTransactionsList(response.data)
+                    }
+                })
+                .catch((err) => {
+                    console.log('Error loading transactions:', err)
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
+        }
+    }, [
+        transactionsList.length,
+        loading,
+        token,
+        setTransactionsList,
+        setLoading,
+    ])
+
+    useEffect(() => {
+        const editingId = id || transactionId
+        console.log('Editing ID to use:', editingId)
+
+        if (editingId) {
+            if (transactionsList.length === 0) {
+                return // Ждем загрузки данных
+            }
+
             const transactionToEdit = transactionsList.find(
-                (t) => t._id === transactionId
+                (t) => t._id === editingId
             )
+            console.log('Transaction found:', !!transactionToEdit)
+
             if (transactionToEdit) {
                 setIsEditing(true)
                 setNewTransactionInfo({
@@ -50,19 +89,24 @@ function Costsform() {
                 })
                 setTransactionDate(new Date(transactionToEdit.date))
                 setActiveCategory(transactionToEdit.category)
+                setTransactionId(editingId)
+                return
+            } else {
+                console.warn('Transaction not found, switching to create mode')
             }
-        } else {
-            setIsEditing(false)
-            setNewTransactionInfo({
-                description: '',
-                sum: '',
-                category: '',
-                date: '',
-            })
-            setTransactionDate('')
-            setActiveCategory('')
         }
-    }, [transactionId, transactionsList])
+
+        setIsEditing(false)
+        setNewTransactionInfo({
+            description: '',
+            sum: '',
+            category: '',
+            date: '',
+        })
+        setTransactionDate('')
+        setActiveCategory('')
+        setTransactionId('')
+    }, [id, transactionId, transactionsList, setTransactionId])
 
     function transactionInfoChange(event, number) {
         event.stopPropagation()
@@ -144,7 +188,7 @@ function Costsform() {
 
         try {
             let response
-            if (isEditing) {
+            if (isEditing && transactionId) {
                 response = await updateTransaction(
                     transactionId,
                     newTransactionInfo,
@@ -167,6 +211,8 @@ function Costsform() {
             setTransactionId('')
             setIsEditing(false)
             setHasValidationRun(false)
+
+            navigate('/')
         } catch (error) {
             console.error('Ошибка при отправке:', error)
         } finally {
@@ -184,6 +230,8 @@ function Costsform() {
                     event.stopPropagation()
                     event.preventDefault()
                     setMobileHeaderNav('Мои расходы')
+                    setTransactionId('')
+                    localStorage.removeItem('editingTransactionId')
                     navigate('/')
                 }}
             >

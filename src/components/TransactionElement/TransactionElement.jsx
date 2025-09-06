@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { deleteTransaction } from '../../services/transactionsHandler'
 
 import {
@@ -11,21 +11,23 @@ import {
 import * as S from './TransactionElement.styled'
 import { TransactionsContext } from '../../сontext/TransactionsContext'
 
-function TransactionElement({ transaction }) {
+function TransactionElement({ transaction, isSelected, onRowClick }) {
     const token = JSON.parse(localStorage.getItem(LS_USER)).token
 
     const { setTransactionsList, transactionId, setTransactionId } =
         useContext(TransactionsContext)
 
-    const isActive = transaction._id === transactionId
-
-    const [isEditing, setIsEditing] = useState(false)
+    const isActive = transaction._id === transactionId || isSelected
 
     return (
         <S.TransactionContainer
             id={transaction._id}
-            $isEditing={isEditing}
             $isActive={isActive}
+            onClick={() => {
+                if (window.innerWidth <= 1200) {
+                    onRowClick(transaction)
+                }
+            }}
         >
             <S.TransactionElement $isActive={isActive}>
                 {transaction.description}
@@ -47,7 +49,6 @@ function TransactionElement({ transaction }) {
                         event.stopPropagation()
                         event.preventDefault()
                         setTransactionId(transaction._id)
-                        setIsEditing(true)
                         console.log('редактирование задачи')
                     }}
                 >

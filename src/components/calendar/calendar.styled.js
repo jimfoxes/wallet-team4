@@ -10,7 +10,7 @@ export const CalendarWrapper = styled.div`
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         width: 343px;
         height: auto;
         border-radius: 0;
@@ -28,7 +28,7 @@ export const Header = styled.div`
     padding: 0 32px;
     padding-top: 32px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         padding: 0;
         padding-top: 12px;
     }
@@ -40,7 +40,7 @@ export const HeaderTop = styled.div`
     align-items: flex-end;
     margin-bottom: 30px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         margin-bottom: 16px;
     }
 `
@@ -98,7 +98,7 @@ export const Content = styled.div`
     overflow-y: auto;
     padding: 0 32px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         padding: 0;
     }
 `
@@ -184,7 +184,7 @@ export const EmptyCell = styled.div`
     height: 40px;
     margin: 3px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         width: 44px;
         height: 44px;
     }
@@ -245,7 +245,7 @@ export const MonthButton = styled.button`
         box-shadow: none;
     }
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         width: 110px;
     }
 `

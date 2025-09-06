@@ -8,7 +8,8 @@ export const MobileBackToMain = styled.div`
     background-color: #ffffff;
     justify-content: flex-start;
     align-items: center;
-    padding: 24px 16px;
+    padding-right: calc(50% - 171px);
+    padding-left: calc(50% - 171px);
 
     p {
         color: #999999;
@@ -18,7 +19,7 @@ export const MobileBackToMain = styled.div`
         letter-spacing: 0px;
     }
 
-    @media (min-width: 376px) {
+    @media (min-width: 1201px) {
         display: none;
     }
 `
@@ -30,13 +31,14 @@ export const TitleCostsform = styled.h2`
     font-size: 24px;
     text-align: left;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         background-color: #ffffff;
         height: 41px;
         margin: 0px;
         line-height: 100%;
         letter-spacing: 0px;
-        padding: 0 16px 24px;
+        padding-right: calc(50% - 171px);
+        padding-left: calc(50% - 171px);
     }
 `
 
@@ -47,12 +49,13 @@ export const Costsform = styled.form`
     flex-direction: column;
     gap: 24px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         background-color: #ffffff;
         padding-left: 16px;
         padding-right: 16px;
-        margin-left: 0px;
+        margin: auto;
         width: 375px;
+        padding-bottom: 30px;
     }
 `
 

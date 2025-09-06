@@ -16,7 +16,7 @@ export const Modal = styled.div`
     align-items: center;
     justify-content: center;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         padding-right: calc(50% - 171px);
         padding-left: calc(50% - 171px);
         background-color: rgba(255, 255, 255, 1);
@@ -33,7 +33,7 @@ export const ModalBlock = styled.div`
     border: none;
     box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         max-width: 343px;
         padding: 0;
         box-shadow: none;
@@ -156,7 +156,7 @@ export const header = styled.header`
     width: 100%;
     background-color: #ffffff;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         padding-right: calc(50% - 171px);
         padding-left: calc(50% - 171px);
         background-color: #f4f5f6;
