@@ -5,7 +5,7 @@ export const OverlayWrapper = styled.div`
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 10;
+    z-index: 5;
 `
 
 export const Title = styled.h1`
@@ -19,7 +19,7 @@ export const Title = styled.h1`
     min-width: 235px;
     height: 48px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         display: none;
     }
 `
@@ -29,12 +29,13 @@ export const MobileTitleWrapper = styled.div`
     flex-wrap: wrap;
     align-items: center;
     align-content: flex-end;
-    gap: 58px;
-    padding-left: 16px;
-    height: 51px;
+    padding-left: calc(50% - 171px);
+    padding-right: calc(50% - 171px);
+    height: 53px;
     background-color: #ffffff;
+    justify-content: space-between;
 
-    @media (min-width: 376px) {
+    @media (min-width: 1201px) {
         display: none;
     }
 `
@@ -66,7 +67,9 @@ export const Container = styled.div`
     padding-left: calc(50% - 600px);
 
     @media (max-width: 1200px) {
-        grid-template-rows: repeat(2, 618px);
+        display: flex;
+        padding-right: calc(50% - 200px);
+        padding-left: calc(50% - 200px);
     }
 `
 
@@ -99,11 +102,16 @@ export const CostsTable = styled.div`
 
 export const HeaderCostsTable = styled.div`
     display: flex;
-    margin: 32px;
+    height: 93px;
+    padding-left: 32px;
     justify-content: space-between;
+    align-items: center;
 
-    @media (max-width: 375px) {
-        margin: 21px 0px 0px 0px;
+    @media (max-width: 1200px) {
+        margin: 0px 0px 0px 0px;
+        padding-bottom: 28px;
+        height: 0px;
+        padding-left: 0;
     }
 `
 
@@ -113,7 +121,7 @@ export const TitleCostsTable = styled.h2`
     font-size: 24px;
     text-align: left;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         display: none;
     }
 `
@@ -126,8 +134,8 @@ export const FilterSortingContainer = styled.div`
     height: 30px;
     padding-top: 12px;
 
-    @media (max-width: 375px) {
-        padding: 0px 0px 24px 16px;
+    @media (max-width: 1200px) {
+        padding: 0px 0px 0px 16px;
         height: 15px;
     }
 `
@@ -147,7 +155,7 @@ export const FilterSortingElement = styled.div`
             return $isCategory ? '260px' : '160px'
         }};
 
-        @media (max-width: 375px) {
+        @media (max-width: 1200px) {
             font-size: 10px;
             letter-spacing: 0px;
         }
@@ -161,17 +169,44 @@ export const FilterSortingElement = styled.div`
     }
 `
 
+export const FixedHeaderContainer = styled.div`
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 5;
+
+    @media (max-width: 1200px) {
+        padding-top: 21px;
+    }
+`
+
 export const ColumnsContainer = styled.div`
     display: flex;
     justify-content: flex-start;
     gap: 32px;
     height: 15px;
-    margin-left: 32px;
+    padding-left: 32px;
+    padding-bottom: 16px;
+    margin-bottom: 10px;
+    border-bottom: 0.5px solid #99999970;
 
-    @media (max-width: 375px) {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 5;
+
+    @media (max-width: 1200px) {
         gap: 16px;
-        margin-left: 16px;
-        height: 18px;
+        padding-left: 16px;
+        top: 60px;
+    }
+
+    @media (max-width: 405px) {
+        gap: 12px;
+    }
+
+    @media (max-width: 360px) {
+        gap: 10px;
     }
 `
 
@@ -185,7 +220,7 @@ export const ColumnsElement = styled.h4`
     color: rgba(153, 153, 153, 1);
     text-align: start;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         width: 74px;
         font-size: 10px;
         line-height: 100%;
@@ -198,18 +233,8 @@ export const ColumnsElement = styled.h4`
 
 export const ColumnsShadowElement = styled.div`
     width: 36px;
-`
-
-export const DemarcationLine = styled.div`
-    width: 100%;
-    border: none;
-    border-top: 0.5px solid #999999;
-    margin-top: 6px;
-    margin-bottom: 18px;
-
-    @media (max-width: 375px) {
-        margin-top: 0px;
-        margin-bottom: 14px;
+    @media (max-width: 1200px) {
+        display: none;
     }
 `
 
@@ -237,7 +262,50 @@ export const Costsform = styled.div`
         width: 379px;
     }
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         display: none;
     }
+`
+
+export const MobileActionButtons = styled.div`
+    display: none;
+
+    @media (max-width: 1200px) {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        padding: 24px 16px;
+        background-color: #ffffff;
+        position: sticky;
+        bottom: 0;
+        border-top: 1px solid #e0e0e0;
+        align-items: center;
+    }
+`
+export const MobileEditButton = styled.button`
+    height: 39px;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 99px;
+    background-color: rgba(31, 164, 108, 1);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 0px;
+    color: rgba(255, 255, 255, 1);
+    cursor: pointer;
+`
+
+export const MobileDeleteButton = styled.button`
+    border: none;
+    border-bottom: 1px solid rgba(153, 153, 153, 1);
+    background-color: transparent;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 150%;
+    letter-spacing: 0px;
+    color: rgba(153, 153, 153, 1);
+    cursor: pointer;
+    text-align: center;
 `

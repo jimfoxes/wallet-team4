@@ -9,6 +9,7 @@ import Loading from '../Loading/Loading'
 import {
     getTransactions,
     getFilteredTransactions,
+    deleteTransaction,
 } from '../../services/transactionsHandler'
 
 import { LS_USER, categorySetter } from '../../services/utilities'
@@ -22,12 +23,39 @@ function Main() {
     const {
         transactionsList,
         setTransactionsList,
-        setMobileHeaderNav,
         loading,
         setLoading,
+        setTransactionId,
     } = useContext(TransactionsContext)
-
+    const [selectedTransaction, setSelectedTransaction] = useState(null)
     const navigate = useNavigate()
+
+    const handleRowClick = (transaction) => {
+        if (window.innerWidth <= 1200) {
+            setSelectedTransaction(
+                transaction._id === selectedTransaction ? null : transaction._id
+            )
+        }
+    }
+
+    const handleEditClick = () => {
+        setTransactionId(selectedTransaction)
+        navigate(`/mobileCostsform/${selectedTransaction}`)
+    }
+
+    const handleDeleteClick = async () => {
+        try {
+            const response = await deleteTransaction(selectedTransaction, token)
+            if (response.name === 'AxiosError') {
+                console.log('error')
+            } else {
+                setTransactionsList(response.data.transactions)
+                setSelectedTransaction(null) // Сбрасываем выбор после удаления
+            }
+        } catch (error) {
+            console.error('Ошибка при удалении:', error)
+        }
+    }
 
     const getTransactionsList = () => {
         setLoading(true)
@@ -191,7 +219,6 @@ function Main() {
                     onClick={(event) => {
                         event.stopPropagation()
                         event.preventDefault()
-                        setMobileHeaderNav('Новый расход')
                         navigate('/mobileCostsform')
                     }}
                 >
@@ -214,87 +241,91 @@ function Main() {
 
             <S.Container>
                 <S.CostsTable $blockScroll={filterPopUp || sortingPopUp}>
-                    <S.HeaderCostsTable>
-                        <S.TitleCostsTable>Таблица расходов</S.TitleCostsTable>
-                        <S.FilterSortingContainer>
-                            <S.FilterSortingElement
-                                $isCategory={true}
-                                onClick={() => {
-                                    setfilterPopUp(!filterPopUp)
-                                }}
-                            >
-                                <a>
-                                    Фильтровать по категории{' '}
-                                    <span>{filter.join(', ')}</span>
-                                </a>
-                                <svg
-                                    width="7"
-                                    height="6"
-                                    viewBox="0 0 7 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                    <S.FixedHeaderContainer>
+                        <S.HeaderCostsTable>
+                            <S.TitleCostsTable>
+                                Таблица расходов
+                            </S.TitleCostsTable>
+                            <S.FilterSortingContainer>
+                                <S.FilterSortingElement
+                                    $isCategory={true}
+                                    onClick={() => {
+                                        setfilterPopUp(!filterPopUp)
+                                    }}
                                 >
-                                    <path
-                                        d="M3.5 5.5L0.468911 0.25L6.53109 0.25L3.5 5.5Z"
-                                        fill="black"
-                                    />
-                                </svg>
-                                {filterPopUp ? (
-                                    <FilterSortingPopUp
-                                        isCategory={true}
-                                        filter={filter}
-                                        filtersSetter={filtersSetter}
-                                    />
-                                ) : (
-                                    ''
-                                )}
-                            </S.FilterSortingElement>
+                                    <a>
+                                        Фильтровать по категории{' '}
+                                        <span>{filter.join(', ')}</span>
+                                    </a>
+                                    <svg
+                                        width="7"
+                                        height="6"
+                                        viewBox="0 0 7 6"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M3.5 5.5L0.468911 0.25L6.53109 0.25L3.5 5.5Z"
+                                            fill="black"
+                                        />
+                                    </svg>
+                                    {filterPopUp ? (
+                                        <FilterSortingPopUp
+                                            isCategory={true}
+                                            filter={filter}
+                                            filtersSetter={filtersSetter}
+                                        />
+                                    ) : (
+                                        ''
+                                    )}
+                                </S.FilterSortingElement>
 
-                            <S.FilterSortingElement
-                                $isCategory={false}
-                                onClick={() => {
-                                    setsortingPopUp(!sortingPopUp)
-                                }}
-                            >
-                                <a>
-                                    Сортировать по <span>{sorting}</span>
-                                </a>
-                                <svg
-                                    width="7"
-                                    height="6"
-                                    viewBox="0 0 7 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                                <S.FilterSortingElement
+                                    $isCategory={false}
+                                    onClick={() => {
+                                        setsortingPopUp(!sortingPopUp)
+                                    }}
                                 >
-                                    <path
-                                        d="M3.5 5.5L0.468911 0.25L6.53109 0.25L3.5 5.5Z"
-                                        fill="black"
-                                    />
-                                </svg>
-                                {sortingPopUp ? (
-                                    <FilterSortingPopUp
-                                        isCategory={false}
-                                        sorting={sorting}
-                                        sortingSetter={sortingSetter}
-                                    />
-                                ) : (
-                                    ''
-                                )}
-                            </S.FilterSortingElement>
-                        </S.FilterSortingContainer>
-                    </S.HeaderCostsTable>
-                    <S.ColumnsContainer>
-                        <S.ColumnsElement>Описание</S.ColumnsElement>
-                        <S.ColumnsElement>Категория</S.ColumnsElement>
-                        <S.ColumnsElement $mobileRight={true}>
-                            Дата
-                        </S.ColumnsElement>
-                        <S.ColumnsElement $mobileRight={true}>
-                            Сумма
-                        </S.ColumnsElement>
-                        <S.ColumnsShadowElement></S.ColumnsShadowElement>
-                    </S.ColumnsContainer>
-                    <S.DemarcationLine></S.DemarcationLine>
+                                    <a>
+                                        Сортировать по <span>{sorting}</span>
+                                    </a>
+                                    <svg
+                                        width="7"
+                                        height="6"
+                                        viewBox="0 0 7 6"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M3.5 5.5L0.468911 0.25L6.53109 0.25L3.5 5.5Z"
+                                            fill="black"
+                                        />
+                                    </svg>
+                                    {sortingPopUp ? (
+                                        <FilterSortingPopUp
+                                            isCategory={false}
+                                            sorting={sorting}
+                                            sortingSetter={sortingSetter}
+                                        />
+                                    ) : (
+                                        ''
+                                    )}
+                                </S.FilterSortingElement>
+                            </S.FilterSortingContainer>
+                        </S.HeaderCostsTable>
+                        <S.ColumnsContainer>
+                            <S.ColumnsElement>Описание</S.ColumnsElement>
+                            <S.ColumnsElement>Категория</S.ColumnsElement>
+                            <S.ColumnsElement $mobileRight={true}>
+                                Дата
+                            </S.ColumnsElement>
+                            <S.ColumnsElement $mobileRight={true}>
+                                Сумма
+                            </S.ColumnsElement>
+                            <S.ColumnsShadowElement></S.ColumnsShadowElement>
+                        </S.ColumnsContainer>
+                    </S.FixedHeaderContainer>
+                    {/* <S.DemarcationLine></S.DemarcationLine> */}
 
                     {filterPopUp || sortingPopUp ? (
                         <S.BlurWrapper></S.BlurWrapper>
@@ -311,11 +342,26 @@ function Main() {
                                     <TransactionElement
                                         key={index}
                                         transaction={el}
-                                    ></TransactionElement>
+                                        isSelected={
+                                            el._id === selectedTransaction
+                                        }
+                                        onRowClick={handleRowClick}
+                                    />
                                 )
                             })
                         )}
                     </S.TransactionsContainer>
+
+                    {selectedTransaction && window.innerWidth <= 1200 && (
+                        <S.MobileActionButtons>
+                            <S.MobileEditButton onClick={handleEditClick}>
+                                Редактировать расход
+                            </S.MobileEditButton>
+                            <S.MobileDeleteButton onClick={handleDeleteClick}>
+                                Удалить расход
+                            </S.MobileDeleteButton>
+                        </S.MobileActionButtons>
+                    )}
                 </S.CostsTable>
 
                 <S.Costsform>

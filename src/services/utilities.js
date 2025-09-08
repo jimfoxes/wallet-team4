@@ -100,7 +100,7 @@ export function formErrors(
 export function columnsHeightDefiner(dataTransactions) {
     const categoriesAmount = { totalSum: 0, maxHeight: 329 }
 
-    const amountByCategories = dataTransactions.map((transaction) => {
+    dataTransactions.forEach((transaction) => {
         categoriesAmount.totalSum += transaction.sum
 
         if (transaction.category in categoriesAmount) {

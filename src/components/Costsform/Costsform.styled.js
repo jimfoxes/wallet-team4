@@ -7,18 +7,19 @@ export const MobileBackToMain = styled.div`
     gap: 6px;
     background-color: #ffffff;
     justify-content: flex-start;
-    align-items: center;
-    padding-left: 16px;
+    align-items: end;
+    padding-right: calc(50% - 171px);
+    padding-left: calc(50% - 171px);
 
     p {
         color: #999999;
         font-weight: 600;
         font-size: 12px;
-        line-height: 150%;
         letter-spacing: 0px;
+        cursor: pointer;
     }
 
-    @media (min-width: 376px) {
+    @media (min-width: 1201px) {
         display: none;
     }
 `
@@ -30,13 +31,15 @@ export const TitleCostsform = styled.h2`
     font-size: 24px;
     text-align: left;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         background-color: #ffffff;
         height: 41px;
-        margin: 0px;
+        margin: 0;
         line-height: 100%;
         letter-spacing: 0px;
-        padding-left: 16px;
+        padding-right: calc(50% - 171px);
+        padding-left: calc(50% - 171px);
+        padding-top: 12px;
     }
 `
 
@@ -47,12 +50,14 @@ export const Costsform = styled.form`
     flex-direction: column;
     gap: 24px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         background-color: #ffffff;
         padding-left: 16px;
         padding-right: 16px;
-        margin-left: 0px;
+        padding-top: 24px;
+        margin: auto;
         width: 375px;
+        padding-bottom: 30px;
     }
 `
 
@@ -78,14 +83,37 @@ export const TitleCategory = styled.label`
     line-height: 100%;
     letter-spacing: 0px;
     text-align: start;
+    position: relative;
+`
+
+export const RequiredStar = styled.span`
+    color: #f25050;
+    position: absolute;
+    top: -3px;
 `
 
 export const DescriptionInput = styled.input`
     height: 39px;
-    border: 0.5px solid rgba(153, 153, 153, 1);
+    border: 0.5px solid
+        ${(props) =>
+            props.$error ? '#F25050' : props.$valid ? '#1FA46C' : '#999999'};
     border-radius: 6px;
     padding: 12px;
     outline: none;
+    background-color: ${(props) =>
+        props.$error ? '#FFEBEB' : props.$valid ? '#DBFFE9' : 'white'};
+
+    &:focus {
+        border: 0.5px solid
+            ${(props) =>
+                props.$error
+                    ? '#F25050'
+                    : props.$valid
+                      ? '#1FA46C'
+                      : '#999999'};
+        background-color: ${(props) =>
+            props.$error ? '#FFEBEB' : props.$valid ? '#DBFFE9' : 'white'};
+    }
 `
 export const CategoriesWrapper = styled.div`
     display: flex;
@@ -99,13 +127,15 @@ export const Category = styled.div`
     border-radius: 30px;
     height: 31px;
     width: auto;
-    color: ${function ({ $filter, $sorting }) {
+    color: ${function ({ $filter, $sorting, $error }) {
+        if ($error) return '#F25050'
         return $filter || $sorting
             ? 'rgba(31, 164, 108, 1)'
             : 'rgba(0, 0, 0, 1)'
     }};
 
-    background-color: ${function ({ $filter, $sorting }) {
+    background-color: ${function ({ $filter, $sorting, $error }) {
+        if ($error) return '#FFEBEB'
         return $filter || $sorting
             ? 'rgba(219, 255, 233, 1)'
             : 'rgba(244, 245, 246, 1)'
@@ -126,16 +156,21 @@ export const Category = styled.div`
 export const CategoriesContainer = styled.div``
 
 export const CostsformButton = styled.button`
-    height: 39;
+    height: 39px;
     border: none;
     border-radius: 6px;
     padding: 12px;
-    background-color: rgba(31, 164, 108, 1);
+    background-color: ${(props) =>
+        props.$disabled ? '#999999' : 'rgba(31, 164, 108, 1)'};
     font-weight: 600;
     font-size: 12px;
     line-height: 100%;
     letter-spacing: 0px;
     color: rgba(255, 255, 255, 1);
+    cursor: ${(props) => (props.$disabled ? 'not-allowed' : 'pointer')};
+    @media (max-width: 1200px) {
+        margin-top: 0;
+    }
 `
 export const CalendarWrapper = styled.div`
     position: absolute;
@@ -145,4 +180,19 @@ export const CalendarWrapper = styled.div`
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     top: 40px;
     left: 5px;
+`
+export const WrapperButton = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 32px 36px 25px 34px;
+    background: #ffffff;
+    border-radius: 18px;
+
+    @media (max-width: 1200px) {
+        box-shadow: 0px -20px 67px -12px rgba(0, 0, 0, 0.13);
+        margin: auto;
+        width: 375px;
+        padding: 24px 16px;
+        border-radius: 0;
+    }
 `

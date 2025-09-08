@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
     CalendarWrapper,
     Header,
@@ -19,20 +20,31 @@ import {
     YearMonthsGrid,
     MonthButton,
     YearWrapper,
+    MobileBackToAnalitics,
+    MobileCalendarWrapper,
+    WrapperButton,
+    CalendarButton,
+    MonthNavigation,
+    NavigationArrow,
 } from './calendar.styled.js'
 import { handlePeriodSelect } from '../../services/transactionsHandler.js'
 import { LS_USER } from '../../services/utilities.js'
+import { AnalyticsContext } from '../../сontext/AnaliticsContext'
 
-const Calendar = ({ setAnalyticsData }) => {
+const Calendar = () => {
     const [mode, setMode] = useState('month')
     const [startDate, setStartDate] = useState(null)
     const [endDate, setEndDate] = useState(null)
     const [startMonth, setStartMonth] = useState(null)
     const [endMonth, setEndMonth] = useState(null)
     const [isSelecting, setIsSelecting] = useState(false)
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1200)
+    const [monthOffset, setMonthOffset] = useState(0)
 
-    const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+    const navigate = useNavigate()
+    const { setAnalyticsData } = useContext(AnalyticsContext)
+
+    const daysOfWeek = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
 
     const generateMonth = (year, month) => {
         const date = new Date(year, month, 1)
@@ -135,8 +147,13 @@ const Calendar = ({ setAnalyticsData }) => {
                     end,
                     token,
                 })
-                setAnalyticsData(transactions)
+                if (setAnalyticsData) {
+                    setAnalyticsData(transactions)
+                }
                 console.log('6666', transactions)
+                if (isMobile) {
+                    navigate('/analytics')
+                }
             } catch (error) {
                 console.error('Failed to fetch transactions:', error)
             }
@@ -149,16 +166,20 @@ const Calendar = ({ setAnalyticsData }) => {
         endMonth,
         token,
         setAnalyticsData,
+        isMobile,
+        navigate,
     ])
 
     useEffect(() => {
-        const hasFullDayRange =
-            mode === 'month' && startDate && endDate && !isSelecting
-        const hasFullMonthRange =
-            mode === 'year' && startMonth && endMonth && !isSelecting
+        if (!isMobile) {
+            const hasFullDayRange =
+                mode === 'month' && startDate && endDate && !isSelecting
+            const hasFullMonthRange =
+                mode === 'year' && startMonth && endMonth && !isSelecting
 
-        if (hasFullDayRange || hasFullMonthRange) {
-            sendPeriod()
+            if (hasFullDayRange || hasFullMonthRange) {
+                sendPeriod()
+            }
         }
     }, [
         sendPeriod,
@@ -168,6 +189,7 @@ const Calendar = ({ setAnalyticsData }) => {
         endMonth,
         isSelecting,
         mode,
+        isMobile,
     ])
 
     const isSelected = (year, month, day) => {
@@ -243,12 +265,17 @@ const Calendar = ({ setAnalyticsData }) => {
             setEndMonth(null)
             setIsSelecting(false)
             setMode(newMode)
+            setMonthOffset(0)
         }
+    }
+
+    const showPreviousMonth = () => {
+        setMonthOffset((prev) => prev + 1)
     }
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth <= 768)
+            setIsMobile(window.innerWidth <= 1200)
         }
 
         window.addEventListener('resize', handleResize)
@@ -256,119 +283,200 @@ const Calendar = ({ setAnalyticsData }) => {
     }, [])
 
     return (
-        <CalendarWrapper>
-            <Header>
-                <HeaderTop>
-                    <Title $isMobile={isMobile}>
-                        {isMobile ? 'Выбор периода' : 'Период'}
-                    </Title>
-                    <ButtonBlock>
-                        <Button
-                            $active={mode === 'month'}
-                            onClick={() => handleModeChange('month')}
-                        >
-                            Месяц
-                        </Button>
-                        <Button
-                            $active={mode === 'year'}
-                            onClick={() => handleModeChange('year')}
-                        >
-                            Год
-                        </Button>
-                    </ButtonBlock>
-                </HeaderTop>
+        <>
+            <MobileBackToAnalitics
+                onClick={(event) => {
+                    event.stopPropagation()
+                    event.preventDefault()
+                    navigate('/analytics')
+                }}
+            >
+                <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M9.44425 1.16669H4.55591C2.43258 1.16669 1.16675 2.43252 1.16675 4.55585V9.43835C1.16675 11.5675 2.43258 12.8334 4.55591 12.8334H9.43841C11.5617 12.8334 12.8276 11.5675 12.8276 9.44419V4.55585C12.8334 2.43252 11.5676 1.16669 9.44425 1.16669ZM10.5001 7.43752H4.55591L6.31175 9.19335C6.48091 9.36252 6.48091 9.64252 6.31175 9.81169C6.22425 9.89919 6.11341 9.94002 6.00258 9.94002C5.89175 9.94002 5.78091 9.89919 5.69341 9.81169L3.19091 7.30919C3.10925 7.22752 3.06258 7.11669 3.06258 7.00002C3.06258 6.88335 3.10925 6.77252 3.19091 6.69085L5.69341 4.18835C5.86258 4.01919 6.14258 4.01919 6.31175 4.18835C6.48091 4.35752 6.48091 4.63752 6.31175 4.80669L4.55591 6.56252H10.5001C10.7392 6.56252 10.9376 6.76085 10.9376 7.00002C10.9376 7.23919 10.7392 7.43752 10.5001 7.43752Z"
+                        fill="#999999"
+                    />
+                </svg>
+                <p>Анализ расходов</p>
+            </MobileBackToAnalitics>
+            <CalendarWrapper>
+                <MobileCalendarWrapper>
+                    <Header>
+                        <HeaderTop>
+                            <Title $isMobile={isMobile}>
+                                {isMobile ? 'Выбор периода' : 'Период'}
+                            </Title>
+                            <ButtonBlock>
+                                <Button
+                                    $active={mode === 'month'}
+                                    onClick={() => handleModeChange('month')}
+                                >
+                                    Месяц
+                                </Button>
+                                <Button
+                                    $active={mode === 'year'}
+                                    onClick={() => handleModeChange('year')}
+                                >
+                                    Год
+                                </Button>
+                            </ButtonBlock>
+                        </HeaderTop>
 
-                {mode === 'month' && (
-                    <>
-                        <DaysOfWeek>
-                            {daysOfWeek.map((day) => (
-                                <DayOfWeekCell key={day}>{day}</DayOfWeekCell>
-                            ))}
-                        </DaysOfWeek>
-                        <Divider />
-                    </>
-                )}
+                        {mode === 'month' && (
+                            <>
+                                <DaysOfWeek>
+                                    {daysOfWeek.map((day) => (
+                                        <DayOfWeekCell key={day}>
+                                            {day}
+                                        </DayOfWeekCell>
+                                    ))}
+                                </DaysOfWeek>
+                                <Divider />
+                            </>
+                        )}
 
-                {mode === 'year' && <Divider />}
-            </Header>
+                        {mode === 'year' && <Divider />}
+                    </Header>
 
-            <Content>
-                {mode === 'month' && (
-                    <>
-                        {months.map(({ year, month }, idx) => {
-                            const dates = generateMonth(year, month)
-                            return (
-                                <MonthWrapper key={idx}>
-                                    <MonthTitle>
-                                        {allMonths[month % 12]} {year}
-                                    </MonthTitle>
-                                    <DatesGrid>
-                                        {dates.map((date, i) =>
-                                            date ? (
-                                                <DayCell
-                                                    key={i}
-                                                    $isSelected={isSelected(
+                    <Content>
+                        {mode === 'month' && (
+                            <>
+                                {months.map(({ year, month }, idx) => {
+                                    const adjustedDate = new Date(
+                                        year,
+                                        month - monthOffset,
+                                        1
+                                    )
+                                    const adjustedYear =
+                                        adjustedDate.getFullYear()
+                                    const adjustedMonth =
+                                        adjustedDate.getMonth()
+
+                                    const dates = generateMonth(
+                                        adjustedYear,
+                                        adjustedMonth
+                                    )
+                                    const isFirstMonth = idx === 0
+                                    return (
+                                        <MonthWrapper key={idx}>
+                                            <MonthNavigation>
+                                                <MonthTitle>
+                                                    {
+                                                        allMonths[
+                                                            adjustedMonth % 12
+                                                        ]
+                                                    }{' '}
+                                                    {adjustedYear}
+                                                </MonthTitle>
+                                                {isFirstMonth && (
+                                                    <NavigationArrow
+                                                        onClick={
+                                                            showPreviousMonth
+                                                        }
+                                                    >
+                                                        <svg
+                                                            width="16"
+                                                            height="16"
+                                                            viewBox="0 0 16 16"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M12 10L8 6L4 10"
+                                                                stroke="#333333"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                    </NavigationArrow>
+                                                )}
+                                            </MonthNavigation>
+                                            <DatesGrid>
+                                                {dates.map((date, i) =>
+                                                    date ? (
+                                                        <DayCell
+                                                            key={i}
+                                                            $isSelected={isSelected(
+                                                                adjustedYear,
+                                                                adjustedMonth,
+                                                                date
+                                                            )}
+                                                            $isInRange={isInRange(
+                                                                adjustedYear,
+                                                                adjustedMonth,
+                                                                date
+                                                            )}
+                                                            onClick={() =>
+                                                                handleDateClick(
+                                                                    adjustedYear,
+                                                                    adjustedMonth,
+                                                                    date
+                                                                )
+                                                            }
+                                                        >
+                                                            {date}
+                                                        </DayCell>
+                                                    ) : (
+                                                        <EmptyCell key={i} />
+                                                    )
+                                                )}
+                                            </DatesGrid>
+                                        </MonthWrapper>
+                                    )
+                                })}
+                            </>
+                        )}
+
+                        {mode === 'year' && (
+                            <>
+                                {generateYears(2024, 2030).map((year) => (
+                                    <YearWrapper key={year}>
+                                        <YearTitle>{year}</YearTitle>
+                                        <YearMonthsGrid>
+                                            {allMonths.map((month, index) => (
+                                                <MonthButton
+                                                    key={index}
+                                                    $isSelected={isMonthSelected(
                                                         year,
-                                                        month,
-                                                        date
+                                                        index
                                                     )}
-                                                    $isInRange={isInRange(
+                                                    $isInRange={isMonthInRange(
                                                         year,
-                                                        month,
-                                                        date
+                                                        index
                                                     )}
                                                     onClick={() =>
-                                                        handleDateClick(
+                                                        handleMonthClick(
                                                             year,
-                                                            month,
-                                                            date
+                                                            index
                                                         )
                                                     }
                                                 >
-                                                    {date}
-                                                </DayCell>
-                                            ) : (
-                                                <EmptyCell key={i} />
-                                            )
-                                        )}
-                                    </DatesGrid>
-                                </MonthWrapper>
-                            )
-                        })}
-                    </>
-                )}
-
-                {mode === 'year' && (
-                    <>
-                        {generateYears(2020, 2030).map((year) => (
-                            <YearWrapper key={year}>
-                                <YearTitle>{year}</YearTitle>
-                                <YearMonthsGrid>
-                                    {allMonths.map((month, index) => (
-                                        <MonthButton
-                                            key={index}
-                                            $isSelected={isMonthSelected(
-                                                year,
-                                                index
-                                            )}
-                                            $isInRange={isMonthInRange(
-                                                year,
-                                                index
-                                            )}
-                                            onClick={() =>
-                                                handleMonthClick(year, index)
-                                            }
-                                        >
-                                            {month}
-                                        </MonthButton>
-                                    ))}
-                                </YearMonthsGrid>
-                            </YearWrapper>
-                        ))}
-                    </>
-                )}
-            </Content>
-        </CalendarWrapper>
+                                                    {month}
+                                                </MonthButton>
+                                            ))}
+                                        </YearMonthsGrid>
+                                    </YearWrapper>
+                                ))}
+                            </>
+                        )}
+                    </Content>
+                    {isMobile && (
+                        <WrapperButton>
+                            <CalendarButton onClick={sendPeriod}>
+                                Выбрать период
+                            </CalendarButton>
+                        </WrapperButton>
+                    )}
+                </MobileCalendarWrapper>
+            </CalendarWrapper>
+        </>
     )
 }
 

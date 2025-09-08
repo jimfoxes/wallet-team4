@@ -1,171 +1,83 @@
 import { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
-
+import { getTransactions } from '../../services/transactionsHandler'
 import SvgComponent from '../SvgComponent'
-
 import {
     addTransaction,
     updateTransaction,
 } from '../../services/transactionsHandler'
-
 import { LS_USER, categories } from '../../services/utilities'
-
 import { TransactionsContext } from '../../сontext/TransactionsContext'
-
 import * as S from './Costsform.styled'
 
 function Costsform() {
-    const { setMobileHeaderNav } = useContext(TransactionsContext)
-
-    const token = JSON.parse(localStorage.getItem(LS_USER)).token
-
+    const { id } = useParams()
     const {
+        setLoading,
         transactionsList,
         setTransactionsList,
         transactionId,
         setTransactionId,
-        setLoading,
+        loading,
     } = useContext(TransactionsContext)
+    const token = JSON.parse(localStorage.getItem(LS_USER)).token
 
     const [isEditing, setIsEditing] = useState(false)
-
     const [newTransactionInfo, setNewTransactionInfo] = useState({})
-
     const [errors, setErrors] = useState({
         description: false,
         sum: false,
         category: false,
         date: false,
     })
-
-    const [error, setError] = useState('')
-
-    function transactionInfoChange(event, number) {
-        event.stopPropagation()
-        event.preventDefault()
-
-        const { name, value } = event.target
-        if (number) {
-            setNewTransactionInfo({
-                ...newTransactionInfo,
-                [name]: Number(value),
-            })
-        } else {
-            setNewTransactionInfo({ ...newTransactionInfo, [name]: value })
-        }
-
-        setErrors({
-            ...errors,
-            [name]: false,
-        })
-
-        setError('')
-    }
-
-    function newTransactionErrors() {
-        let isCorrect = true
-
-        if (newTransactionInfo.description.trim().length < 4) {
-            errors.description = true
-            setError('Заполните обязательное поле, минимум 4 символа')
-            isCorrect = false
-            return isCorrect
-        }
-
-        if (!newTransactionInfo.sum) {
-            errors.sum = true
-            setError('Укажите положительное число')
-            isCorrect = false
-            return isCorrect
-        }
-
-        if (!newTransactionInfo.category.trim()) {
-            errors.category = true
-            setError('Выберите категорию')
-            isCorrect = false
-            return isCorrect
-        }
-
-        if (!newTransactionInfo.date) {
-            errors.date = true
-            setError('Пожалуйста, выберите дату')
-            isCorrect = false
-            return isCorrect
-        }
-
-        setErrors(errors)
-        return isCorrect
-    }
-
+    const [hasValidationRun, setHasValidationRun] = useState(false)
     const [activeCategory, setActiveCategory] = useState('')
-
-    function setNewTransactionCategory(event) {
-        event.stopPropagation()
-        event.preventDefault()
-
-        const selectedCategory = event.currentTarget.getAttribute('name')
-
-        setActiveCategory(selectedCategory)
-
-        setNewTransactionInfo({
-            ...newTransactionInfo,
-            category: selectedCategory,
-        })
-    }
-
     const [showCalendar, setShowCalendar] = useState(false)
-
-    function showCalendarToggle() {
-        setShowCalendar(!showCalendar)
-    }
-
     const [transactionDate, setTransactionDate] = useState('')
-
-    const newTransactionDateSelect = (newSelected) => {
-        setShowCalendar(!showCalendar)
-        if (newSelected) {
-            setTransactionDate(newSelected)
-            const dateStr = format(newSelected, 'yyyy-MM-dd')
-            setNewTransactionInfo({
-                ...newTransactionInfo,
-                date: dateStr,
-            })
-        }
-    }
-
-    function addNewTransaction(event) {
-        event.stopPropagation()
-        event.preventDefault()
-
-        if (newTransactionErrors()) {
-            addTransaction(newTransactionInfo, token).then((response) => {
-                setTransactionsList(response.data.transactions)
-                setActiveCategory('')
-                setTransactionDate('')
-
-                setNewTransactionInfo({
-                    description: '',
-                    sum: '',
-                    category: '',
-                    date: '',
-                })
-
-                setLoading(false)
-            })
-        } else {
-            setLoading(false)
-        }
-    }
+    const navigate = useNavigate()
 
     useEffect(() => {
-        if (transactionId) {
+        if (transactionsList.length === 0 && !loading) {
+            setLoading(true)
+            getTransactions(token)
+                .then((response) => {
+                    if (response.name !== 'AxiosError') {
+                        setTransactionsList(response.data)
+                    }
+                })
+                .catch((err) => {
+                    console.log('Error loading transactions:', err)
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
+        }
+    }, [
+        transactionsList.length,
+        loading,
+        token,
+        setTransactionsList,
+        setLoading,
+    ])
+
+    useEffect(() => {
+        const editingId = id || transactionId
+        console.log('Editing ID to use:', editingId)
+
+        if (editingId) {
+            if (transactionsList.length === 0) {
+                return // Ждем загрузки данных
+            }
+
             const transactionToEdit = transactionsList.find(
-                (t) => t._id === transactionId
+                (t) => t._id === editingId
             )
+            console.log('Transaction found:', !!transactionToEdit)
+
             if (transactionToEdit) {
                 setIsEditing(true)
                 setNewTransactionInfo({
@@ -176,9 +88,117 @@ function Costsform() {
                 })
                 setTransactionDate(new Date(transactionToEdit.date))
                 setActiveCategory(transactionToEdit.category)
+                setTransactionId(editingId)
+                return
+            } else {
+                console.warn('Transaction not found, switching to create mode')
             }
-        } else {
-            setIsEditing(false)
+        }
+
+        setIsEditing(false)
+        setNewTransactionInfo({
+            description: '',
+            sum: '',
+            category: '',
+            date: '',
+        })
+        setTransactionDate('')
+        setActiveCategory('')
+        setTransactionId('')
+    }, [id, transactionId, transactionsList, setTransactionId])
+
+    function transactionInfoChange(event, number) {
+        event.stopPropagation()
+        event.preventDefault()
+
+        const { name, value } = event.target
+        setNewTransactionInfo({
+            ...newTransactionInfo,
+            [name]: number ? Number(value) : value,
+        })
+
+        setErrors({
+            ...errors,
+            [name]: false,
+        })
+    }
+
+    function validateForm() {
+        const newErrors = {
+            description:
+                !newTransactionInfo.description ||
+                newTransactionInfo.description.trim().length < 4,
+            sum: !newTransactionInfo.sum,
+            category: !newTransactionInfo.category,
+            date: !newTransactionInfo.date,
+        }
+        setErrors(newErrors)
+        return Object.values(newErrors).some((error) => error)
+    }
+
+    function setNewTransactionCategory(event) {
+        event.stopPropagation()
+        event.preventDefault()
+
+        const selectedCategory = event.currentTarget.getAttribute('name')
+        setActiveCategory(selectedCategory)
+        setNewTransactionInfo({
+            ...newTransactionInfo,
+            category: selectedCategory,
+        })
+        setErrors({
+            ...errors,
+            category: false,
+        })
+    }
+
+    function showCalendarToggle() {
+        setShowCalendar(!showCalendar)
+    }
+
+    function newTransactionDateSelect(newSelected) {
+        setShowCalendar(!showCalendar)
+        if (newSelected) {
+            setTransactionDate(newSelected)
+            const dateStr = format(newSelected, 'yyyy-MM-dd')
+            setNewTransactionInfo({
+                ...newTransactionInfo,
+                date: dateStr,
+            })
+            setErrors({
+                ...errors,
+                date: false,
+            })
+        }
+    }
+
+    async function handleSubmit(event) {
+        event.stopPropagation()
+        event.preventDefault()
+
+        setHasValidationRun(true)
+        const hasErrors = validateForm()
+
+        if (hasErrors) {
+            return
+        }
+
+        setLoading(true)
+
+        try {
+            let response
+            if (isEditing && transactionId) {
+                response = await updateTransaction(
+                    transactionId,
+                    newTransactionInfo,
+                    token
+                )
+            } else {
+                response = await addTransaction(newTransactionInfo, token)
+            }
+
+            setTransactionsList(response.data.transactions)
+
             setNewTransactionInfo({
                 description: '',
                 sum: '',
@@ -187,26 +207,20 @@ function Costsform() {
             })
             setTransactionDate('')
             setActiveCategory('')
-        }
-    }, [transactionId, transactionsList])
+            setTransactionId('')
+            setIsEditing(false)
+            setHasValidationRun(false)
 
-    function saveEditedTransaction(event) {
-        event.stopPropagation()
-        event.preventDefault()
-        console.log(newTransactionInfo.date)
-        if (newTransactionErrors()) {
-            updateTransaction(transactionId, newTransactionInfo, token).then(
-                (response) => {
-                    setTransactionsList(response.data.transactions)
-                    setTransactionId('')
-                    setIsEditing(false)
-                    setLoading(false)
-                }
-            )
+            navigate('/')
+        } catch (error) {
+            console.error('Ошибка при отправке:', error)
+        } finally {
+            setLoading(false)
         }
     }
 
-    const navigate = useNavigate()
+    const hasErrors = Object.values(errors).some((error) => error)
+    const isButtonDisabled = (hasValidationRun && hasErrors) || loading
 
     return (
         <>
@@ -214,7 +228,8 @@ function Costsform() {
                 onClick={(event) => {
                     event.stopPropagation()
                     event.preventDefault()
-                    setMobileHeaderNav('Мои расходы')
+                    setTransactionId('')
+                    localStorage.removeItem('editingTransactionId')
                     navigate('/')
                 }}
             >
@@ -239,54 +254,63 @@ function Costsform() {
 
             <S.Costsform>
                 <S.CategoryContainer>
-                    <S.TitleCategory>Описание</S.TitleCategory>
-                    {errors.description ? <p>{error}</p> : ''}
+                    <S.TitleCategory>
+                        Описание
+                        {errors.description && (
+                            <S.RequiredStar>*</S.RequiredStar>
+                        )}
+                    </S.TitleCategory>
                     <S.DescriptionInput
                         name="description"
                         placeholder="Введите описание"
                         type="text"
                         value={newTransactionInfo.description || ''}
-                        onChange={(event) => {
+                        onChange={(event) =>
                             transactionInfoChange(event, false)
-                        }}
+                        }
+                        $error={errors.description}
+                        $valid={
+                            newTransactionInfo.description?.length >= 4 &&
+                            !errors.description
+                        }
                     />
                 </S.CategoryContainer>
 
                 <S.CategoryContainer>
-                    <S.TitleCategory>Категория</S.TitleCategory>
-                    {errors.category ? <p>{error}</p> : ''}
-
+                    <S.TitleCategory>
+                        Категория
+                        {errors.category && <S.RequiredStar>*</S.RequiredStar>}
+                    </S.TitleCategory>
                     <S.CategoriesWrapper>
-                        {categories.map((el, index) => {
-                            return (
-                                <S.Category
-                                    key={index}
-                                    $filter={
-                                        newTransactionInfo.category ===
+                        {categories.map((el, index) => (
+                            <S.Category
+                                key={index}
+                                $filter={
+                                    newTransactionInfo.category ===
+                                    Object.keys(el).toString()
+                                }
+                                $error={errors.category}
+                                name={Object.keys(el)}
+                                onClick={setNewTransactionCategory}
+                            >
+                                <SvgComponent
+                                    content={Object.keys(el)}
+                                    isActive={
+                                        activeCategory ===
                                         Object.keys(el).toString()
                                     }
-                                    name={Object.keys(el)}
-                                    onClick={(event) => {
-                                        setNewTransactionCategory(event)
-                                    }}
-                                >
-                                    <SvgComponent
-                                        content={Object.keys(el)}
-                                        isActive={
-                                            activeCategory ===
-                                            Object.keys(el).toString()
-                                        }
-                                    ></SvgComponent>
-                                    <span>{Object.values(el)}</span>
-                                </S.Category>
-                            )
-                        })}
+                                />
+                                <span>{Object.values(el)}</span>
+                            </S.Category>
+                        ))}
                     </S.CategoriesWrapper>
                 </S.CategoryContainer>
 
                 <S.CategoryContainer>
-                    <S.TitleCategory>Дата</S.TitleCategory>
-                    {errors.date ? <p>{error}</p> : ''}
+                    <S.TitleCategory>
+                        Дата
+                        {errors.date && <S.RequiredStar>*</S.RequiredStar>}
+                    </S.TitleCategory>
                     <S.DescriptionInput
                         name="date"
                         placeholder="Введите дату"
@@ -298,8 +322,9 @@ function Costsform() {
                                 : ''
                         }
                         readOnly
+                        $error={errors.date}
+                        $valid={newTransactionInfo.date && !errors.date}
                     />
-
                     {showCalendar && (
                         <S.CalendarWrapper>
                             <DayPicker
@@ -315,34 +340,34 @@ function Costsform() {
                 </S.CategoryContainer>
 
                 <S.CategoryContainer>
-                    <S.TitleCategory>Сумма</S.TitleCategory>
-                    {errors.sum ? <p>{error}</p> : ''}
+                    <S.TitleCategory>
+                        Сумма
+                        {errors.sum && <S.RequiredStar>*</S.RequiredStar>}
+                    </S.TitleCategory>
                     <S.DescriptionInput
                         name="sum"
                         placeholder="Введите сумму"
                         type="text"
                         value={newTransactionInfo.sum || ''}
-                        onChange={(event) => {
-                            transactionInfoChange(event, true)
-                        }}
+                        onChange={(event) => transactionInfoChange(event, true)}
+                        $error={errors.sum}
+                        $valid={newTransactionInfo.sum && !errors.sum}
                     />
                 </S.CategoryContainer>
-
-                <S.CostsformButton
-                    onClick={(event) => {
-                        setLoading(true)
-                        if (isEditing) {
-                            saveEditedTransaction(event)
-                        } else {
-                            addNewTransaction(event)
-                        }
-                    }}
-                >
-                    {isEditing
-                        ? 'Сохранить редактирование'
-                        : 'Добавить новый расход'}
-                </S.CostsformButton>
             </S.Costsform>
+            <S.WrapperButton>
+                <S.CostsformButton
+                    onClick={handleSubmit}
+                    disabled={isButtonDisabled}
+                    $disabled={isButtonDisabled}
+                >
+                    {loading
+                        ? 'Отправка...'
+                        : isEditing
+                          ? 'Сохранить редактирование'
+                          : 'Добавить новый расход'}
+                </S.CostsformButton>
+            </S.WrapperButton>
         </>
     )
 }

@@ -5,18 +5,24 @@ export const CalendarWrapper = styled.div`
     height: 540px;
     border-radius: 30px;
     box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
-    background: rgb(255, 255, 255);
+
     overflow: hidden;
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 375px) {
-        width: 343px;
-        height: auto;
+    @media (max-width: 1200px) {
+        width: auto;
+        padding-right: calc(50% - 187px);
+        padding-left: calc(50% - 187px);
         border-radius: 0;
         box-shadow: none;
-        background: white;
+        height: 627px;
     }
+`
+
+export const MobileCalendarWrapper = styled.div`
+    background: rgb(255, 255, 255);
+    overflow: hidden;
 `
 
 export const Header = styled.div`
@@ -28,9 +34,9 @@ export const Header = styled.div`
     padding: 0 32px;
     padding-top: 32px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         padding: 0;
-        padding-top: 12px;
+        padding: 12px 16px 0 16px;
     }
 `
 
@@ -40,7 +46,7 @@ export const HeaderTop = styled.div`
     align-items: flex-end;
     margin-bottom: 30px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         margin-bottom: 16px;
     }
 `
@@ -86,20 +92,42 @@ export const Divider = styled.div`
     width: calc(100% + 64px);
     margin: 0 -32px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1200px) {
         position: absolute;
-        left: 0;
-        width: 100vw;
     }
 `
 
 export const Content = styled.div`
     flex-grow: 1;
     overflow-y: auto;
-    padding: 0 32px;
+    padding: 0px 24px 0px 32px;
+    max-height: 420px;
 
-    @media (max-width: 375px) {
-        padding: 0;
+    /* Стили для тонкой полосы прокрутки */
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 30px;
+        background: rgba(217, 217, 217, 1);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Для Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(217, 217, 217, 1) transparent;
+
+    @media (max-width: 1200px) {
+        padding: 0 0 0 16px;
+        max-height: 457px;
     }
 `
 
@@ -108,18 +136,21 @@ export const DaysOfWeek = styled.div`
     grid-template-columns: repeat(7, 1fr);
     justify-items: center;
     align-items: center;
-    gap: 0;
+    gap: 6px;
 `
 
 export const DayOfWeekCell = styled.div`
     width: 40px;
-    height: 40px;
-    margin: 3px;
+    height: 27px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
     color: rgb(153, 153, 153);
+
+    @media (max-width: 1200px) {
+        width: 44px;
+    }
 `
 
 export const MonthWrapper = styled.div`
@@ -150,7 +181,7 @@ export const DatesGrid = styled.div`
     justify-items: center;
     align-items: start;
     text-align: center;
-    gap: 0;
+    gap: 6px;
 `
 
 export const DayCell = styled.div`
@@ -172,19 +203,22 @@ export const DayCell = styled.div`
     justify-content: center;
     transition: background 0.3s;
     cursor: pointer;
-    margin: 3px;
 
     &:hover {
         background: rgb(219, 255, 233);
+    }
+
+    @media (max-width: 1200px) {
+        width: 44px;
+        height: 44px;
     }
 `
 
 export const EmptyCell = styled.div`
     width: 40px;
     height: 40px;
-    margin: 3px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         width: 44px;
         height: 44px;
     }
@@ -245,7 +279,74 @@ export const MonthButton = styled.button`
         box-shadow: none;
     }
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         width: 110px;
+    }
+`
+
+export const MobileBackToAnalitics = styled.div`
+    display: flex;
+    flex-direction: row;
+    height: 42px;
+    gap: 6px;
+    background-color: #ffffff;
+    justify-content: flex-start;
+    align-items: end;
+    padding-right: calc(50% - 171px);
+    padding-left: calc(50% - 171px);
+
+    p {
+        color: #999999;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0px;
+        cursor: pointer;
+    }
+
+    @media (min-width: 1201px) {
+        display: none;
+    }
+`
+
+export const WrapperButton = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    background: #ffffff;
+    box-shadow: 0px -20px 67px -12px rgba(0, 0, 0, 0.13);
+`
+export const CalendarButton = styled.button`
+    height: 39px;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    background-color: rgba(31, 164, 108, 1);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 0px;
+    color: rgba(255, 255, 255, 1);
+`
+export const MonthNavigation = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+`
+
+export const NavigationArrow = styled.button`
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 21px 4px 1px 7px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+
+    &:active {
+        background-color: rgb(219, 255, 233);
     }
 `

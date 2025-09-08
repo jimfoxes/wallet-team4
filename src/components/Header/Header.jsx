@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
 
-import { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import { LS_USER } from '../../services/utilities'
 
@@ -18,6 +17,16 @@ export const Header = () => {
     const [mobileNavPopUp, setMobileNavPopUp] = useState(false)
 
     const navigate = useNavigate()
+    const location = useLocation()
+
+    useEffect(() => {
+        const path = location.pathname
+        if (path === '/' || path.startsWith('/mobileCostsform')) {
+            setMobileHeaderNav(path === '/' ? 'Мои расходы' : 'Новый расход')
+        } else if (path === '/analytics' || path === '/calendar') {
+            setMobileHeaderNav('Анализ расходов')
+        }
+    }, [location.pathname, setMobileHeaderNav])
 
     return (
         <S.header>
@@ -69,9 +78,7 @@ export const Header = () => {
                             onClick={(event) => {
                                 event.stopPropagation()
                                 event.preventDefault()
-                                setMobileHeaderNav(
-                                    event.currentTarget.children[0].textContent
-                                )
+                                setMobileHeaderNav('Мои расходы')
                                 navigate('/')
                             }}
                         >
@@ -83,10 +90,9 @@ export const Header = () => {
                             onClick={(event) => {
                                 event.stopPropagation()
                                 event.preventDefault()
-                                setMobileHeaderNav(
-                                    event.currentTarget.children[0].textContent
-                                )
+                                setMobileHeaderNav('Новый расход')
                                 navigate('/mobileCostsform')
+                                setMobileNavPopUp(false)
                             }}
                         >
                             <p>Новый расход</p>
@@ -97,10 +103,9 @@ export const Header = () => {
                             onClick={(event) => {
                                 event.stopPropagation()
                                 event.preventDefault()
-                                setMobileHeaderNav(
-                                    event.currentTarget.children[0].textContent
-                                )
+                                setMobileHeaderNav('Анализ расходов')
                                 navigate('/analytics')
+                                setMobileNavPopUp(false)
                             }}
                         >
                             <p>Анализ расходов</p>

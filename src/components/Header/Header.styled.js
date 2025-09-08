@@ -5,7 +5,7 @@ export const header = styled.header`
     width: 100%;
     background-color: #ffffff;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         padding-right: calc(50% - 171px);
         padding-left: calc(50% - 171px);
         background-color: #f4f5f6;
@@ -24,12 +24,15 @@ export const headerBlock = styled.div`
     position: relative;
     top: 0;
     left: 0;
+    @media (max-width: 1200px) {
+        height: 54px;
+    }
 `
 
 export const headerLogo = styled.div`
     display: block;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         img {
             width: 109px;
             height: 14px;
@@ -53,7 +56,7 @@ export const headerNav = styled.nav`
     justify-content: space-between;
     gap: 24px;
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         display: none;
     }
 `
@@ -78,7 +81,7 @@ export const mobileHeaderNav = styled.div`
         position: relative;
     }
 
-    @media (min-width: 376px) {
+    @media (min-width: 1201px) {
         display: none;
     }
 `
@@ -88,7 +91,7 @@ export const mobileHeaderNavWrapper = styled.div`
     align-items: center;
     gap: 8px;
 
-    @media (min-width: 376px) {
+    @media (min-width: 1201px) {
         display: none;
     }
 `
@@ -157,7 +160,7 @@ export const headerExitBtn = styled.button`
         color: rgba(31, 164, 108, 1);
     }
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         font-size: 12px;
         line-height: 150%;
     }

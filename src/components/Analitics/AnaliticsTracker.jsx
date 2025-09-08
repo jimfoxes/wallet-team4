@@ -77,6 +77,25 @@ const AnaliticsTracker = ({ analyticsData }) => {
         })
     }
 
+    const formatDateRange = () => {
+        const savedPeriod = JSON.parse(localStorage.getItem('selectedPeriod'))
+        if (savedPeriod?.start && savedPeriod?.end) {
+            const start = new Date(savedPeriod.start)
+            const end = new Date(savedPeriod.end)
+
+            const formatDate = (date) => {
+                return date.toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                })
+            }
+
+            return `${formatDate(start)} - ${formatDate(end)}`
+        }
+        return 'период не выбран'
+    }
+
     return (
         <S.TrackerCard>
             <AnaliticsHeader
@@ -85,7 +104,7 @@ const AnaliticsTracker = ({ analyticsData }) => {
                         columnsHeightDefiner(analyticsData).totalSum.toString()
                     ) + ' ₽'
                 }
-                date="10 июля 2024"
+                date={formatDateRange()}
             />
             <S.AnaliticsCategoriesContainer>
                 {columnsDataDefiner(analyticsData).map((category) => (

@@ -27,7 +27,7 @@ export const Container = styled.div`
         flex-direction: row;
     }
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         top: 15px;
         left: 0px;
         padding: 10px;
@@ -70,7 +70,7 @@ export const ListItem = styled.li`
         font-size: 12px;
     }
 
-    @media (max-width: 375px) {
+    @media (max-width: 1200px) {
         height: 26px;
         padding: 7px 10px 7px 10px;
         gap: 6px;
