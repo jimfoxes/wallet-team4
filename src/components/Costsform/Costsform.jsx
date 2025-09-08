@@ -17,7 +17,6 @@ import * as S from './Costsform.styled'
 function Costsform() {
     const { id } = useParams()
     const {
-        setMobileHeaderNav,
         setLoading,
         transactionsList,
         setTransactionsList,
@@ -229,7 +228,6 @@ function Costsform() {
                 onClick={(event) => {
                     event.stopPropagation()
                     event.preventDefault()
-                    setMobileHeaderNav('Мои расходы')
                     setTransactionId('')
                     localStorage.removeItem('editingTransactionId')
                     navigate('/')

@@ -23,7 +23,6 @@ function Main() {
     const {
         transactionsList,
         setTransactionsList,
-        setMobileHeaderNav,
         loading,
         setLoading,
         setTransactionId,
@@ -40,7 +39,6 @@ function Main() {
     }
 
     const handleEditClick = () => {
-        setMobileHeaderNav('Редактирование')
         setTransactionId(selectedTransaction)
         navigate(`/mobileCostsform/${selectedTransaction}`)
     }
@@ -221,7 +219,6 @@ function Main() {
                     onClick={(event) => {
                         event.stopPropagation()
                         event.preventDefault()
-                        setMobileHeaderNav('Новый расход')
                         navigate('/mobileCostsform')
                     }}
                 >

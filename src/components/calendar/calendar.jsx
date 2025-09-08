@@ -27,7 +27,6 @@ import {
 } from './calendar.styled.js'
 import { handlePeriodSelect } from '../../services/transactionsHandler.js'
 import { LS_USER } from '../../services/utilities.js'
-import { TransactionsContext } from '../../сontext/TransactionsContext'
 import { AnalyticsContext } from '../../сontext/AnaliticsContext'
 
 const Calendar = () => {
@@ -41,7 +40,6 @@ const Calendar = () => {
 
     const navigate = useNavigate()
     const { setAnalyticsData } = useContext(AnalyticsContext)
-    const { setMobileHeaderNav } = useContext(TransactionsContext)
 
     const daysOfWeek = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
 
@@ -151,7 +149,6 @@ const Calendar = () => {
                 }
                 console.log('6666', transactions)
                 if (isMobile) {
-                    setMobileHeaderNav('Анализ расходов')
                     navigate('/analytics')
                 }
             } catch (error) {
@@ -280,7 +277,6 @@ const Calendar = () => {
                 onClick={(event) => {
                     event.stopPropagation()
                     event.preventDefault()
-                    setMobileHeaderNav('Анализ расходов')
                     navigate('/analytics')
                 }}
             >
