@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AnaliticsTracker from './AnaliticsTracker'
 import Calendar from '../calendar/calendar'
 import { handlePeriodSelect } from '../../services/transactionsHandler'
 import { LS_USER } from '../../services/utilities'
+import { AnalyticsContext } from '../../сontext/AnaliticsContext'
 import * as S from './Analitics.styled'
 
 const Analitics = () => {
-    const [analyticsData, setAnalyticsData] = useState([])
+    const { analyticsData, setAnalyticsData } = useContext(AnalyticsContext)
     const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 1200)
     const navigate = useNavigate()
 
@@ -44,7 +45,7 @@ const Analitics = () => {
         }
 
         loadAnalyticsData()
-    }, [])
+    }, [setAnalyticsData])
 
     const handleOpenMobileCalendar = () => {
         navigate('/calendar')
@@ -59,9 +60,7 @@ const Analitics = () => {
                 {!isMobileView && <S.Title>Анализ расходов</S.Title>}
                 <S.analiticsContent>
                     {/* Десктопный календарь */}
-                    {!isMobileView && (
-                        <Calendar setAnalyticsData={setAnalyticsData} />
-                    )}
+                    {!isMobileView && <Calendar />}
 
                     <AnaliticsTracker analyticsData={analyticsData} />
                     {/* Мобильная кнопка "Выбрать другой период" */}

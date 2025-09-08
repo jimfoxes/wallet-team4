@@ -24,6 +24,9 @@ export const headerBlock = styled.div`
     position: relative;
     top: 0;
     left: 0;
+    @media (max-width: 1200px) {
+        height: 54px;
+    }
 `
 
 export const headerLogo = styled.div`

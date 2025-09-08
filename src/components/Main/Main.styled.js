@@ -275,7 +275,7 @@ export const MobileActionButtons = styled.div`
         flex-direction: column;
         gap: 12px;
         width: 100%;
-        padding: 16px;
+        padding: 24px 16px;
         background-color: #ffffff;
         position: sticky;
         bottom: 0;
@@ -295,10 +295,6 @@ export const MobileEditButton = styled.button`
     letter-spacing: 0px;
     color: rgba(255, 255, 255, 1);
     cursor: pointer;
-
-    @media (max-width: 1200px) {
-        padding: 12px 80px;
-    }
 `
 
 export const MobileDeleteButton = styled.button`

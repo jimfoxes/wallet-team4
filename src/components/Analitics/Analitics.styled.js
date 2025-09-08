@@ -4,7 +4,6 @@ export const TrackerCard = styled.section`
     border-radius: 30px;
     box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
     background-color: #fff;
-    max-width: 789px;
     padding: 38px 32px;
     overflow: hidden;
     font-family:
@@ -46,13 +45,12 @@ export const HeaderContainer = styled.header`
     align-items: flex-start;
     justify-content: flex-start;
 
-    @media (max-width: 991px) {
+    @media (max-width: 1200px) {
         max-width: 100%;
     }
 `
 
 export const HeaderContent = styled.div`
-    width: 268px;
     max-width: 100%;
 `
 

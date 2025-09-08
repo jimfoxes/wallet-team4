@@ -7,7 +7,7 @@ export const MobileBackToMain = styled.div`
     gap: 6px;
     background-color: #ffffff;
     justify-content: flex-start;
-    align-items: center;
+    align-items: end;
     padding-right: calc(50% - 171px);
     padding-left: calc(50% - 171px);
 
@@ -15,8 +15,8 @@ export const MobileBackToMain = styled.div`
         color: #999999;
         font-weight: 600;
         font-size: 12px;
-        line-height: 150%;
         letter-spacing: 0px;
+        cursor: pointer;
     }
 
     @media (min-width: 1201px) {
@@ -34,11 +34,12 @@ export const TitleCostsform = styled.h2`
     @media (max-width: 1200px) {
         background-color: #ffffff;
         height: 41px;
-        margin: 0px;
+        margin: 0;
         line-height: 100%;
         letter-spacing: 0px;
         padding-right: calc(50% - 171px);
         padding-left: calc(50% - 171px);
+        padding-top: 12px;
     }
 `
 
@@ -53,6 +54,7 @@ export const Costsform = styled.form`
         background-color: #ffffff;
         padding-left: 16px;
         padding-right: 16px;
+        padding-top: 24px;
         margin: auto;
         width: 375px;
         padding-bottom: 30px;
@@ -158,7 +160,6 @@ export const CostsformButton = styled.button`
     border: none;
     border-radius: 6px;
     padding: 12px;
-    margin-top: 14px;
     background-color: ${(props) =>
         props.$disabled ? '#999999' : 'rgba(31, 164, 108, 1)'};
     font-weight: 600;
@@ -167,6 +168,9 @@ export const CostsformButton = styled.button`
     letter-spacing: 0px;
     color: rgba(255, 255, 255, 1);
     cursor: ${(props) => (props.$disabled ? 'not-allowed' : 'pointer')};
+    @media (max-width: 1200px) {
+        margin-top: 0;
+    }
 `
 export const CalendarWrapper = styled.div`
     position: absolute;
@@ -176,4 +180,19 @@ export const CalendarWrapper = styled.div`
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     top: 40px;
     left: 5px;
+`
+export const WrapperButton = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 32px 36px 25px 34px;
+    background: #ffffff;
+    border-radius: 18px;
+
+    @media (max-width: 1200px) {
+        box-shadow: 0px -20px 67px -12px rgba(0, 0, 0, 0.13);
+        margin: auto;
+        width: 375px;
+        padding: 24px 16px;
+        border-radius: 0;
+    }
 `

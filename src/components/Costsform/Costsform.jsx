@@ -356,7 +356,8 @@ function Costsform() {
                         $valid={newTransactionInfo.sum && !errors.sum}
                     />
                 </S.CategoryContainer>
-
+            </S.Costsform>
+            <S.WrapperButton>
                 <S.CostsformButton
                     onClick={handleSubmit}
                     disabled={isButtonDisabled}
@@ -368,7 +369,7 @@ function Costsform() {
                           ? 'Сохранить редактирование'
                           : 'Добавить новый расход'}
                 </S.CostsformButton>
-            </S.Costsform>
+            </S.WrapperButton>
         </>
     )
 }
