@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import AnaliticsTracker from './AnaliticsTracker'
 import Calendar from '../calendar/calendar'
 import { handlePeriodSelect } from '../../services/transactionsHandler'
@@ -8,48 +8,75 @@ import * as S from './Analitics.styled'
 
 const Analitics = () => {
     const [analyticsData, setAnalyticsData] = useState([])
-
-    const isMobileView = window.innerWidth <= 768
+    const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 1200)
+    const navigate = useNavigate()
 
     useEffect(() => {
-        const savedPeriod = JSON.parse(localStorage.getItem('selectedPeriod'))
-        const token = JSON.parse(localStorage.getItem(LS_USER))?.token
-
-        if (savedPeriod?.start && savedPeriod?.end && token) {
-            handlePeriodSelect({
-                start: new Date(savedPeriod.start),
-                end: new Date(savedPeriod.end),
-                token,
-            })
-                .then((data) => {
-                    setAnalyticsData(data)
-                    localStorage.removeItem('selectedPeriod')
-                })
-                .catch((error) =>
-                    console.error('Ошибка при загрузке аналитики:', error)
-                )
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth <= 1200)
         }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
     }, [])
 
+    useEffect(() => {
+        const loadAnalyticsData = async () => {
+            const savedPeriod = JSON.parse(
+                localStorage.getItem('selectedPeriod')
+            )
+            const token = JSON.parse(localStorage.getItem(LS_USER))?.token
+
+            if (savedPeriod?.start && savedPeriod?.end && token) {
+                try {
+                    const data = await handlePeriodSelect({
+                        start: new Date(savedPeriod.start),
+                        end: new Date(savedPeriod.end),
+                        token,
+                    })
+                    setAnalyticsData(data)
+                    // Не удаляем сразу, чтобы при перезагрузке данные сохранялись
+                    // localStorage.removeItem('selectedPeriod')
+                } catch (error) {
+                    console.error('Ошибка при загрузке аналитики:', error)
+                }
+            }
+        }
+
+        loadAnalyticsData()
+    }, [])
+
+    const handleOpenMobileCalendar = () => {
+        navigate('/calendar')
+    }
+
     return (
-        <S.analiticsMain>
-            <S.Title>Анализ расходов</S.Title>
-            <S.analiticsContent>
-                {/* Мобильная кнопка "Выбрать другой период" */}
-                {isMobileView && (
-                    <Link to="/calendar">
-                        <button>Выбрать другой период</button>
-                    </Link>
-                )}
+        <>
+            <S.MobileTitleWrapper>
+                <S.MobileTitle>Анализ расходов</S.MobileTitle>
+            </S.MobileTitleWrapper>
+            <S.analiticsMain>
+                {!isMobileView && <S.Title>Анализ расходов</S.Title>}
+                <S.analiticsContent>
+                    {/* Десктопный календарь */}
+                    {!isMobileView && (
+                        <Calendar setAnalyticsData={setAnalyticsData} />
+                    )}
 
-                {/* Десктопный календарь */}
-                {!isMobileView && (
-                    <Calendar setAnalyticsData={setAnalyticsData} />
-                )}
-
-                <AnaliticsTracker analyticsData={analyticsData} />
-            </S.analiticsContent>
-        </S.analiticsMain>
+                    <AnaliticsTracker analyticsData={analyticsData} />
+                    {/* Мобильная кнопка "Выбрать другой период" */}
+                    {isMobileView && (
+                        <S.wrapperButton>
+                            <S.calendarButton
+                                onClick={handleOpenMobileCalendar}
+                            >
+                                Выбрать другой период
+                            </S.calendarButton>
+                        </S.wrapperButton>
+                    )}
+                </S.analiticsContent>
+            </S.analiticsMain>
+        </>
     )
 }
 

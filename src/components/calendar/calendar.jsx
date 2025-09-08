@@ -30,7 +30,7 @@ const Calendar = ({ setAnalyticsData }) => {
     const [startMonth, setStartMonth] = useState(null)
     const [endMonth, setEndMonth] = useState(null)
     const [isSelecting, setIsSelecting] = useState(false)
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1200)
 
     const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
@@ -248,7 +248,7 @@ const Calendar = ({ setAnalyticsData }) => {
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth <= 768)
+            setIsMobile(window.innerWidth <= 1200)
         }
 
         window.addEventListener('resize', handleResize)

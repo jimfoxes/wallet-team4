@@ -12,7 +12,6 @@ export const CalendarWrapper = styled.div`
 
     @media (max-width: 1200px) {
         width: 343px;
-        height: auto;
         border-radius: 0;
         box-shadow: none;
         background: white;
@@ -86,7 +85,7 @@ export const Divider = styled.div`
     width: calc(100% + 64px);
     margin: 0 -32px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1200px) {
         position: absolute;
         left: 0;
         width: 100vw;
