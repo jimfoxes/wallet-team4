@@ -24,6 +24,8 @@ import {
     MobileCalendarWrapper,
     WrapperButton,
     CalendarButton,
+    MonthNavigation,
+    NavigationArrow,
 } from './calendar.styled.js'
 import { handlePeriodSelect } from '../../services/transactionsHandler.js'
 import { LS_USER } from '../../services/utilities.js'
@@ -37,6 +39,7 @@ const Calendar = () => {
     const [endMonth, setEndMonth] = useState(null)
     const [isSelecting, setIsSelecting] = useState(false)
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 1200)
+    const [monthOffset, setMonthOffset] = useState(0)
 
     const navigate = useNavigate()
     const { setAnalyticsData } = useContext(AnalyticsContext)
@@ -163,6 +166,8 @@ const Calendar = () => {
         endMonth,
         token,
         setAnalyticsData,
+        isMobile,
+        navigate,
     ])
 
     useEffect(() => {
@@ -184,6 +189,7 @@ const Calendar = () => {
         endMonth,
         isSelecting,
         mode,
+        isMobile,
     ])
 
     const isSelected = (year, month, day) => {
@@ -259,7 +265,12 @@ const Calendar = () => {
             setEndMonth(null)
             setIsSelecting(false)
             setMode(newMode)
+            setMonthOffset(0)
         }
+    }
+
+    const showPreviousMonth = () => {
+        setMonthOffset((prev) => prev + 1)
     }
 
     useEffect(() => {
@@ -337,31 +348,75 @@ const Calendar = () => {
                         {mode === 'month' && (
                             <>
                                 {months.map(({ year, month }, idx) => {
-                                    const dates = generateMonth(year, month)
+                                    const adjustedDate = new Date(
+                                        year,
+                                        month - monthOffset,
+                                        1
+                                    )
+                                    const adjustedYear =
+                                        adjustedDate.getFullYear()
+                                    const adjustedMonth =
+                                        adjustedDate.getMonth()
+
+                                    const dates = generateMonth(
+                                        adjustedYear,
+                                        adjustedMonth
+                                    )
+                                    const isFirstMonth = idx === 0
                                     return (
                                         <MonthWrapper key={idx}>
-                                            <MonthTitle>
-                                                {allMonths[month % 12]} {year}
-                                            </MonthTitle>
+                                            <MonthNavigation>
+                                                <MonthTitle>
+                                                    {
+                                                        allMonths[
+                                                            adjustedMonth % 12
+                                                        ]
+                                                    }{' '}
+                                                    {adjustedYear}
+                                                </MonthTitle>
+                                                {isFirstMonth && (
+                                                    <NavigationArrow
+                                                        onClick={
+                                                            showPreviousMonth
+                                                        }
+                                                    >
+                                                        <svg
+                                                            width="16"
+                                                            height="16"
+                                                            viewBox="0 0 16 16"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M12 10L8 6L4 10"
+                                                                stroke="#333333"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                    </NavigationArrow>
+                                                )}
+                                            </MonthNavigation>
                                             <DatesGrid>
                                                 {dates.map((date, i) =>
                                                     date ? (
                                                         <DayCell
                                                             key={i}
                                                             $isSelected={isSelected(
-                                                                year,
-                                                                month,
+                                                                adjustedYear,
+                                                                adjustedMonth,
                                                                 date
                                                             )}
                                                             $isInRange={isInRange(
-                                                                year,
-                                                                month,
+                                                                adjustedYear,
+                                                                adjustedMonth,
                                                                 date
                                                             )}
                                                             onClick={() =>
                                                                 handleDateClick(
-                                                                    year,
-                                                                    month,
+                                                                    adjustedYear,
+                                                                    adjustedMonth,
                                                                     date
                                                                 )
                                                             }
@@ -381,7 +436,7 @@ const Calendar = () => {
 
                         {mode === 'year' && (
                             <>
-                                {generateYears(2020, 2030).map((year) => (
+                                {generateYears(2024, 2030).map((year) => (
                                     <YearWrapper key={year}>
                                         <YearTitle>{year}</YearTitle>
                                         <YearMonthsGrid>

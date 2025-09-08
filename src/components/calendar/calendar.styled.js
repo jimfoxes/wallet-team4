@@ -327,3 +327,26 @@ export const CalendarButton = styled.button`
     letter-spacing: 0px;
     color: rgba(255, 255, 255, 1);
 `
+export const MonthNavigation = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+`
+
+export const NavigationArrow = styled.button`
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 21px 4px 1px 7px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+
+    &:active {
+        background-color: rgb(219, 255, 233);
+    }
+`
