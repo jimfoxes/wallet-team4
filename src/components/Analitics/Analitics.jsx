@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AnaliticsTracker from './AnaliticsTracker'
-import Calendar from '../calendar/calendar'
+import Calendar from '../Calendar'
 import { handlePeriodSelect } from '../../services/transactionsHandler'
 import { LS_USER } from '../../services/utilities'
 import { AnalyticsContext } from '../../сontext/AnaliticsContext'

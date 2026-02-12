@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Header } from '../components/Header/Header'
-import Calendar from '../components/calendar/calendar'
+import Calendar from '../components/Calendar'
 import { TransactionsProvider } from '../сontext/TransactionsProvider'
 import { AnalyticsProvider } from '../сontext/AnaliticsProvider'
 

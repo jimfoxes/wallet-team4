@@ -26,10 +26,10 @@ import {
     CalendarButton,
     MonthNavigation,
     NavigationArrow,
-} from './calendar.styled.js'
+} from './Calendar.styled.js'
 import { handlePeriodSelect } from '../../services/transactionsHandler.js'
 import { LS_USER } from '../../services/utilities.js'
-import { AnalyticsContext } from '../../сontext/AnaliticsContext'
+import { AnalyticsContext } from '../../сontext/AnaliticsContext.js'
 
 const Calendar = () => {
     const [mode, setMode] = useState('month')
