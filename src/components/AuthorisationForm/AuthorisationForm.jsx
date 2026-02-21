@@ -66,9 +66,9 @@ const AuthorisationForm = ({ isSignUp }) => {
             <S.header>
                 <S.headerBlock>
                     <S.headerLogo>
-                        <a href="/">
+                        <Link to="/">
                             <img src="/images/logo.svg" alt="logo" />
-                        </a>
+                        </Link>
                     </S.headerLogo>
                 </S.headerBlock>
             </S.header>
@@ -133,9 +133,9 @@ const AuthorisationForm = ({ isSignUp }) => {
                             $error={errors.button}
                             onClick={submitButton}
                         >
-                            <a href="../main.html">
-                                {isSignUp ? 'Зарегистрироваться' : 'Войти'}
-                            </a>
+                            {/* <a href="../main.html"> */}
+                            {isSignUp ? 'Зарегистрироваться' : 'Войти'}
+                            {/* </a> */}
                         </S.ModalButton>
                         <S.ModalFormFooter className="modal__form-group">
                             <p>

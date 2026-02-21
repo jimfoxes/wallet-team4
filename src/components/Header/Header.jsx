@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 
 import { LS_USER } from '../../services/utilities'
 
@@ -32,9 +32,9 @@ export const Header = () => {
         <S.header>
             <S.headerBlock>
                 <S.headerLogo>
-                    <a href="/">
+                    <Link to="/">
                         <img src="/images/logo.svg" alt="logo" />
-                    </a>
+                    </Link>
                 </S.headerLogo>
                 <S.headerNav>
                     <S.headerNavBtn>
