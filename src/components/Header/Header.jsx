@@ -33,7 +33,7 @@ export const Header = () => {
             <S.headerBlock>
                 <S.headerLogo>
                     <Link to="/">
-                        <img src="/images/logo.svg" alt="logo" />
+                        <img src="images/logo.svg" alt="logo" />
                     </Link>
                 </S.headerLogo>
                 <S.headerNav>
